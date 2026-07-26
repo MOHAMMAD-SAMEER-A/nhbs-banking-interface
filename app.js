@@ -140,15 +140,47 @@ const speakPrompt = (text, customLang = null) => {
     state.speech.voices = voices;
   }
 
+  const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+  // Filter out novelty/robotic voices (e.g. Fred, Zarvox) to ensure a professional tone
+  const NOVELTY_VOICE_REGEXP = /fred|bells|cellos|hysterical|pipe|princess|zarvox|whisper|boing|good|bad|deranged|bubbles|moira|trinoids|organ/i;
+  const professionalVoices = state.speech.voices.filter(v => !NOVELTY_VOICE_REGEXP.test(v.name));
+
   // Find a matching voice for the target locale
   const normalizedTarget = lang.toLowerCase().replace('_', '-');
   const targetPrefix = normalizedTarget.split('-')[0];
   
-  let matchingVoice = state.speech.voices.find(v => {
-    const vLang = v.lang.toLowerCase().replace('_', '-');
-    return vLang === normalizedTarget;
-  });
+  let matchingVoice = null;
 
+  // If it's English, try to find a high-quality professional voice first
+  if (targetPrefix === 'en') {
+    const EnglishPriority = ["samantha", "google us english", "microsoft zira", "microsoft david", "siri", "daniel"];
+    for (const priorityName of EnglishPriority) {
+      matchingVoice = professionalVoices.find(v => 
+        v.name.toLowerCase().includes(priorityName) && 
+        v.lang.toLowerCase().replace('_', '-').startsWith('en')
+      );
+      if (matchingVoice) break;
+    }
+  }
+
+  // If not found, look for exact language match in professional list
+  if (!matchingVoice) {
+    matchingVoice = professionalVoices.find(v => {
+      const vLang = v.lang.toLowerCase().replace('_', '-');
+      return vLang === normalizedTarget;
+    });
+  }
+
+  // If still not found, look for prefix match in professional list
+  if (!matchingVoice) {
+    matchingVoice = professionalVoices.find(v => {
+      const vLang = v.lang.toLowerCase().replace('_', '-');
+      return vLang.startsWith(targetPrefix);
+    });
+  }
+
+  // If still not found, look for prefix match in the raw list (including novelty)
   if (!matchingVoice) {
     matchingVoice = state.speech.voices.find(v => {
       const vLang = v.lang.toLowerCase().replace('_', '-');
@@ -156,8 +188,15 @@ const speakPrompt = (text, customLang = null) => {
     });
   }
 
+  // Mobile optimization:
+  // If we are on a mobile device and the selected voice is NOT local (meaning it is a cloud/network voice),
+  // do NOT set utterance.voice. Mobile browsers (especially Chrome/Samsung on Android) often fail silently
+  // or hang when trying to play non-local/cloud voices if they are not pre-downloaded. Leaving utterance.voice
+  // unset lets the mobile OS automatically select its default local high-quality voice for that language code.
   if (matchingVoice) {
-    utterance.voice = matchingVoice;
+    if (matchingVoice.localService || !isMobile) {
+      utterance.voice = matchingVoice;
+    }
   }
 
   // Animation triggers on waveform
