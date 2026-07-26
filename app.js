@@ -93,6 +93,13 @@ const logEvent = (category, message) => {
 // ----------------------------------------------------
 // 3. MULTILINGUAL TEXT-TO-SPEECH (TTS) ENGINE
 // ----------------------------------------------------
+// Localized confirmation messages for language change alerts
+const LANG_CONFIRMATIONS = {
+  'en-US': 'Assistant language configured to English.',
+  'ta-IN': 'உதவியாளர் மொழி தமிழுக்கு மாற்றப்பட்டது.',
+  'hi-IN': 'सहायक भाषा हिंदी पर सेट की गई है।'
+};
+
 const initSpeechEngine = () => {
   const loadVoices = () => {
     state.speech.voices = window.speechSynthesis.getVoices();
@@ -110,12 +117,45 @@ const speakPrompt = (text, customLang = null) => {
   // Cancel any ongoing speech
   window.speechSynthesis.cancel();
 
-  const lang = customLang || state.speech.lang;
+  // Determine language dynamically if not explicitly passed
+  let lang = customLang;
+  if (!lang) {
+    if (/[\u0B80-\u0BFF]/.test(text)) {
+      lang = 'ta-IN';
+    } else if (/[\u0900-\u097F]/.test(text)) {
+      lang = 'hi-IN';
+    } else {
+      // Fallback to English for Latin/English text to avoid TTS engine issues
+      // when trying to read English using Tamil/Hindi voice on mobile devices.
+      lang = 'en-US';
+    }
+  }
+
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = lang;
 
+  // Refresh voices on the fly (crucial for mobile where getVoices is populated asynchronously)
+  const voices = window.speechSynthesis.getVoices();
+  if (voices && voices.length > 0) {
+    state.speech.voices = voices;
+  }
+
   // Find a matching voice for the target locale
-  const matchingVoice = state.speech.voices.find(v => v.lang.startsWith(lang.split('-')[0]));
+  const normalizedTarget = lang.toLowerCase().replace('_', '-');
+  const targetPrefix = normalizedTarget.split('-')[0];
+  
+  let matchingVoice = state.speech.voices.find(v => {
+    const vLang = v.lang.toLowerCase().replace('_', '-');
+    return vLang === normalizedTarget;
+  });
+
+  if (!matchingVoice) {
+    matchingVoice = state.speech.voices.find(v => {
+      const vLang = v.lang.toLowerCase().replace('_', '-');
+      return vLang.startsWith(targetPrefix);
+    });
+  }
+
   if (matchingVoice) {
     utterance.voice = matchingVoice;
   }
@@ -126,7 +166,7 @@ const speakPrompt = (text, customLang = null) => {
 
   utterance.onstart = () => {
     if (waveform) waveform.classList.add('speaking');
-    if (statusText) statusText.innerText = `ASSISTANT SPEAKING (${LANG_NAMES[lang]})`;
+    if (statusText) statusText.innerText = `ASSISTANT SPEAKING (${LANG_NAMES[lang] || lang})`;
   };
 
   utterance.onend = () => {
@@ -134,7 +174,8 @@ const speakPrompt = (text, customLang = null) => {
     if (statusText) statusText.innerText = 'ASSISTANT IDLE';
   };
 
-  utterance.onerror = () => {
+  utterance.onerror = (e) => {
+    console.error('SpeechSynthesisUtterance error:', e);
     if (waveform) waveform.classList.remove('speaking');
     if (statusText) statusText.innerText = 'ASSISTANT IDLE';
   };
@@ -416,7 +457,8 @@ const initVoiceHub = () => {
   langSelect.addEventListener('change', () => {
     state.speech.lang = langSelect.value;
     logEvent('SYSTEM', `Assistant vocal language switched to: ${state.speech.lang}`);
-    speakPrompt(`Assistant language configured to ${LANG_NAMES[state.speech.lang]}`, state.speech.lang);
+    const confirmationText = LANG_CONFIRMATIONS[state.speech.lang] || `Language set to ${LANG_NAMES[state.speech.lang]}`;
+    speakPrompt(confirmationText, state.speech.lang);
   });
 
   // Trigger manual speech translation
