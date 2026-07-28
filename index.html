@@ -158,6 +158,11 @@
           <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
           Wealth Advisor
         </button>
+        <button class="nav-link" data-tab="loan" id="nav-loan">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 5c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm-5 10c0-2.5 4-3.9 5-3.9s5 1.4 5 3.9H7z"/></svg>
+          Property Loan
+          <span class="badge badge-cyan sidebar-badge" id="badge-loan-status">50% LTV</span>
+        </button>
         <button class="nav-link" data-tab="vault" id="nav-vault">
           <svg class="nav-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
           Vault Locker
@@ -324,6 +329,20 @@
                 <div class="module-status-badge">
                   <span class="status-dot green"></span>
                   <span>ADVICE GENERATED</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="module-nav-card" data-target="loan">
+              <div class="module-card-icon text-cyan">
+                <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 5c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm-5 10c0-2.5 4-3.9 5-3.9s5 1.4 5 3.9H7z"/></svg>
+              </div>
+              <div class="module-card-info">
+                <h4>AI Property Loan</h4>
+                <p>Verify site EXIF data, calculate guidelines, and apply with strict 50% LTV limits.</p>
+                <div class="module-status-badge">
+                  <span class="status-dot green"></span>
+                  <span>50% LTV CAP ACTIVE</span>
                 </div>
               </div>
             </div>
@@ -690,7 +709,194 @@
           </div>
         </section>
 
-        <!-- VIEW 10: Aadhaar Biometric Vault Locker -->
+        <!-- VIEW 10: NEW! AI Geotagged Property Loan System (50% LTV Cap) -->
+        <section id="view-loan" class="tab-panel">
+          <div class="section-header">
+            <h2>AI Geotagged Property Loan System (50% LTV Limit)</h2>
+            <span class="badge badge-cyan" id="badge-loan-hdr">COMPLIANCE SCANNER ACTIVE</span>
+          </div>
+
+          <div class="loan-grid">
+            <!-- Left Column: Site Document & Photo Scanning -->
+            <div class="glass-card loan-card">
+              <h3 class="glow-text">Digital Document & Site Verification</h3>
+              <p class="desc">Upload property deed and geotagged site photograph to extract coordinates and parse EXIF metadata.</p>
+              
+              <div class="document-scan-zone">
+                <div class="upload-slot" id="deed-upload-slot">
+                  <svg class="upload-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                  <span class="upload-label" id="deed-label">Drag & Drop Property Deed (.PDF/.DOCX)</span>
+                  <div class="slot-actions">
+                    <button class="btn btn-sm btn-outline" id="btn-load-sample-deed">Load Sample Deed</button>
+                  </div>
+                </div>
+                
+                <div class="upload-slot" id="photo-upload-slot">
+                  <svg class="upload-icon" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+                  <span class="upload-label" id="photo-label">Drag & Drop Geotagged Photo (.JPG/.PNG)</span>
+                  <div class="slot-actions">
+                    <button class="btn btn-sm btn-outline" id="btn-load-sample-photo">Load Sample Photo</button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="exif-scanner-box hidden" id="exif-scanner-container">
+                <div class="scanner-hologram">
+                  <div class="scanner-laser"></div>
+                  <span class="scanner-text">PARSING SITE EXIF METADATA...</span>
+                </div>
+              </div>
+
+              <div class="exif-data-display glass-card hidden" id="exif-data-panel">
+                <h4>Extracted EXIF Metadata</h4>
+                <div class="exif-metrics">
+                  <div class="exif-row">
+                    <span>GPS Latitude:</span>
+                    <strong id="exif-lat" class="text-cyan">11.3410° N</strong>
+                  </div>
+                  <div class="exif-row">
+                    <span>GPS Longitude:</span>
+                    <strong id="exif-lng" class="text-cyan">77.7172° E</strong>
+                  </div>
+                  <div class="exif-row">
+                    <span>Boundary Accuracy:</span>
+                    <strong id="exif-accuracy" class="text-green">±3.2 meters (Verified)</strong>
+                  </div>
+                  <div class="exif-row">
+                    <span>Geotag Verification:</span>
+                    <strong class="text-green">[Verified via Sat-Core]</strong>
+                  </div>
+                  <div class="exif-row">
+                    <span>GPS Capture Time:</span>
+                    <strong id="exif-time" class="font-mono">2026-07-28 23:25:24</strong>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Column: Calculator & Valuation -->
+            <div class="glass-card loan-card">
+              <h3 class="glow-text">AI Property Valuation & Strict 50% LTV Calculator</h3>
+              <p class="desc">Enter area parameters and guideline values to compute maximum loan eligibility. Compliance rules enforce a 50% Loan-to-Value limit.</p>
+              
+              <div class="valuation-inputs">
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="loan-area">Property Area (sq. ft)</label>
+                    <input type="number" id="loan-area" value="2500" min="100" step="50">
+                  </div>
+                  <div class="form-group">
+                    <label for="loan-rate">Guideline Value (₹ / sq. ft)</label>
+                    <input type="number" id="loan-rate" value="1600" min="100" step="50">
+                  </div>
+                </div>
+
+                <div class="valuation-metrics">
+                  <div class="val-row">
+                    <span>Total Property Valuation:</span>
+                    <strong id="loan-val-total" class="text-green">₹40,00,000.00</strong>
+                  </div>
+                  <div class="val-row text-accent-cyan">
+                    <span>Max Disbursable Loan (50% LTV Cap):</span>
+                    <strong id="loan-val-max" class="text-cyan">₹20,00,000.00</strong>
+                  </div>
+                </div>
+
+                <div class="form-group margin-top">
+                  <div class="label-with-badge">
+                    <label for="loan-requested">Requested Loan Amount (₹)</label>
+                    <span id="badge-ltv-cap" class="badge badge-accent hidden">[50% LTV Cap Enforced]</span>
+                  </div>
+                  <input type="number" id="loan-requested" value="1500000" min="10000" step="5000">
+                  <input type="range" id="loan-requested-range" min="10000" max="2000000" value="1500000" step="5000" class="cyber-slider">
+                </div>
+
+                <div class="compliance-alert-box">
+                  <span class="warning-icon">⚠️</span>
+                  <p>Government & Banking Compliance Caps Loan-to-Value (LTV) at a maximum of 50% of verified property valuation.</p>
+                </div>
+
+                <div class="form-row margin-top">
+                  <div class="form-group">
+                    <label for="loan-tenure">Tenure (Years): <span id="label-loan-tenure" class="text-cyan">10 Years</span></label>
+                    <input type="range" id="loan-tenure" min="1" max="15" value="10" step="1" class="cyber-slider">
+                  </div>
+                  <div class="form-group">
+                    <label>Interest Rate (Fixed)</label>
+                    <span class="static-val text-green font-orbitron">8.50% p.a.</span>
+                  </div>
+                </div>
+
+                <div class="emi-output-card">
+                  <span class="emi-label">ESTIMATED MONTHLY EMI</span>
+                  <span id="loan-emi-value" class="emi-value text-cyan">₹18,582.00</span>
+                </div>
+
+                <button id="btn-generate-sanction" class="btn btn-cyan btn-full-width margin-top" disabled>GENERATE DIGITAL SANCTION LETTER</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sanction Letter Preview Box (revealed after click) -->
+          <div id="sanction-letter-container" class="sanction-letter-wrapper glass-card margin-top hidden">
+            <div class="sanction-inner">
+              <div class="sanction-seal">
+                <div class="seal-inner">NHBS VALID</div>
+              </div>
+              <div class="sanction-header">
+                <h4 class="glow-text">DIGITAL LOAN SANCTION MEMORANDUM</h4>
+                <span class="sanction-ref" id="sanction-ref-no">REF: NHBS-PL-8942-A</span>
+              </div>
+              
+              <div class="sanction-body">
+                <div class="sanction-grid">
+                  <div>
+                    <span class="s-label">BORROWER IDENTIFICATION</span>
+                    <strong class="s-val" id="sanction-name">-</strong>
+                    <span class="s-label">CREDENTIAL AUTH TOKEN</span>
+                    <code class="s-val-code" id="sanction-token">[Aadhaar_Auth_Token_Verified]</code>
+                  </div>
+                  <div>
+                    <span class="s-label">GEOTAGGED SITE COORDINATES</span>
+                    <strong class="s-val" id="sanction-coords">-</strong>
+                    <span class="s-label">GPS SYNC ACCURACY</span>
+                    <strong class="s-val text-green" id="sanction-gps-accuracy">-</strong>
+                  </div>
+                  <div>
+                    <span class="s-label">VERIFIED SITE PROPERTY VALUE</span>
+                    <strong class="s-val text-green" id="sanction-prop-val">-</strong>
+                    <span class="s-label">SANCTIONED LOAN PRINCIPAL</span>
+                    <strong class="s-val text-cyan" id="sanction-loan-amount">-</strong>
+                  </div>
+                  <div>
+                    <span class="s-label">COMPLIANCE RATIO (LTV)</span>
+                    <strong class="s-val text-green" id="sanction-ltv-ratio">50.00%</strong>
+                    <span class="s-label">MONTHLY AMORTIZED INSTALLMENT (EMI)</span>
+                    <strong class="s-val text-cyan" id="sanction-emi">-</strong>
+                  </div>
+                </div>
+                
+                <div class="sanction-disclaimer">
+                  This document is cryptographically verified using synthetic Aadhaar identity token validation protocols. Funding is pre-allocated in local branch escrow vaults and is ready for immediate phygital disbursement.
+                </div>
+              </div>
+              
+              <div class="sanction-footer">
+                <div class="signer">
+                  <span class="signature-line"></span>
+                  <span>NHBS SECURE VAULT ENGINE</span>
+                  <small>Autonomous Disbursers</small>
+                </div>
+                <button id="btn-sanction-speak" class="btn btn-green">
+                  <svg class="btn-icon-svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
+                  LISTEN TO SANCTION DETAILS
+                </button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- VIEW 11: Aadhaar Biometric Vault Locker -->
         <section id="view-vault" class="tab-panel">
           <div class="section-header">
             <h2>Aadhaar Biometric Vault Locker</h2>

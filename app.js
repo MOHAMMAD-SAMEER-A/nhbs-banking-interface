@@ -31,6 +31,19 @@ const state = {
     lang: 'en-US', // 'en-US', 'ta-IN', 'hi-IN'
     voices: []
   },
+  loan: {
+    deedUploaded: false,
+    photoUploaded: false,
+    coordinates: 'Lat: 11.3410° N, Long: 77.7172° E',
+    gpsTimestamp: '2026-07-28 23:25:24',
+    accuracy: '±3.2 meters (Verified)',
+    area: 2500,
+    rate: 1600,
+    requestedAmount: 1500000,
+    tenure: 10,
+    interestRate: 8.50,
+    sanctioned: false
+  },
   transactions: [],
   auditLogs: []
 };
@@ -549,6 +562,10 @@ const processChatbotQuery = (query) => {
     intent = 'TAXATION_LEDGER_STREAM';
     responseText = 'I have identified your request for tax management processes. Transitioning you to the Tax & GST Rule Engine console.';
     targetTab = 'taxation';
+  } else if (/\bdeed\b|\bloan\b|\bproperty\b|\bvaluation\b|\bltv\b|\bgeotag\b/i.test(q)) {
+    intent = 'PROPERTY_LOAN';
+    responseText = 'Initiating property site scanning protocols. Transitioning you to the AI Geotagged Property Loan System console.';
+    targetTab = 'loan';
   } else if (/\bdoor\b|\bgate\b|\bentry\b|\bexit\b|\btelemetry\b|\bopen\b|\bclose\b/i.test(q)) {
     intent = 'DOOR_TELEMETRY';
     responseText = 'Analyzing door telemetry logs. Redirecting to the entrance gate hydraulic system controls.';
@@ -757,7 +774,275 @@ const initPortfolioAdvisor = () => {
 };
 
 // ----------------------------------------------------
-// 11. VIEW 10: AADHAAR BIOMETRIC VAULT LOCKER
+// 11. VIEW 10: NEW! AI GEOTAGGED PROPERTY LOAN SYSTEM
+// ----------------------------------------------------
+const initLoanSystem = () => {
+  const deedUpload = document.getElementById('deed-upload-slot');
+  const photoUpload = document.getElementById('photo-upload-slot');
+  const deedLabel = document.getElementById('deed-label');
+  const photoLabel = document.getElementById('photo-label');
+  const btnDeed = document.getElementById('btn-load-sample-deed');
+  const btnPhoto = document.getElementById('btn-load-sample-photo');
+  
+  const scannerContainer = document.getElementById('exif-scanner-container');
+  const exifPanel = document.getElementById('exif-data-panel');
+  const exifLat = document.getElementById('exif-lat');
+  const exifLng = document.getElementById('exif-lng');
+  const exifAccuracy = document.getElementById('exif-accuracy');
+  const exifTime = document.getElementById('exif-time');
+
+  const inputArea = document.getElementById('loan-area');
+  const inputRate = document.getElementById('loan-rate');
+  const valTotal = document.getElementById('loan-val-total');
+  const valMax = document.getElementById('loan-val-max');
+  
+  const inputRequested = document.getElementById('loan-requested');
+  const rangeRequested = document.getElementById('loan-requested-range');
+  const badgeCap = document.getElementById('badge-ltv-cap');
+  
+  const inputTenure = document.getElementById('loan-tenure');
+  const labelTenure = document.getElementById('label-loan-tenure');
+  const emiValue = document.getElementById('loan-emi-value');
+  const btnSanction = document.getElementById('btn-generate-sanction');
+  
+  const sanctionContainer = document.getElementById('sanction-letter-container');
+  const sanctionName = document.getElementById('sanction-name');
+  const sanctionToken = document.getElementById('sanction-token');
+  const sanctionCoords = document.getElementById('sanction-coords');
+  const sanctionGpsAccuracy = document.getElementById('sanction-gps-accuracy');
+  const sanctionPropVal = document.getElementById('sanction-prop-val');
+  const sanctionLoanAmount = document.getElementById('sanction-loan-amount');
+  const sanctionLtvRatio = document.getElementById('sanction-ltv-ratio');
+  const sanctionEmi = document.getElementById('sanction-emi');
+  const sanctionRefNo = document.getElementById('sanction-ref-no');
+  const btnSanctionSpeak = document.getElementById('btn-sanction-speak');
+
+  // Recalculate property valuation and LTV limit
+  const recalculateLoan = () => {
+    const area = parseFloat(inputArea.value) || 0;
+    const rate = parseFloat(inputRate.value) || 0;
+    const totalValuation = area * rate;
+    const maxApproved = totalValuation * 0.50;
+
+    valTotal.innerText = formatCurrency(totalValuation);
+    valMax.innerText = formatCurrency(maxApproved);
+
+    // Update state
+    state.loan.area = area;
+    state.loan.rate = rate;
+
+    // Dynamically limit requested loan input and range
+    rangeRequested.max = maxApproved;
+    
+    let requested = parseFloat(inputRequested.value) || 0;
+    
+    // Check strict 50% LTV limit enforcement
+    if (requested > maxApproved) {
+      requested = maxApproved;
+      inputRequested.value = requested;
+      badgeCap.classList.remove('hidden');
+    } else {
+      badgeCap.classList.add('hidden');
+    }
+
+    rangeRequested.value = requested;
+    state.loan.requestedAmount = requested;
+
+    // Calculate EMI
+    // EMI = [P x r x (1+r)^n] / [(1+r)^n - 1]
+    const principal = requested;
+    const annualInterestRate = state.loan.interestRate; // 8.5%
+    const monthlyRate = annualInterestRate / 12 / 100;
+    const tenureMonths = state.loan.tenure * 12;
+
+    let emi = 0;
+    if (principal > 0 && monthlyRate > 0 && tenureMonths > 0) {
+      emi = (principal * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths)) / (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+    }
+
+    emiValue.innerText = formatCurrency(emi);
+    return { totalValuation, maxApproved, requested, emi };
+  };
+
+  // Event listeners for recalculations
+  inputArea.addEventListener('input', recalculateLoan);
+  inputRate.addEventListener('input', recalculateLoan);
+  
+  inputRequested.addEventListener('input', (e) => {
+    let val = parseFloat(e.target.value) || 0;
+    const area = parseFloat(inputArea.value) || 0;
+    const rate = parseFloat(inputRate.value) || 0;
+    const maxApproved = area * rate * 0.50;
+
+    if (val > maxApproved) {
+      val = maxApproved;
+      e.target.value = val;
+      badgeCap.classList.remove('hidden');
+    } else {
+      badgeCap.classList.add('hidden');
+    }
+    
+    rangeRequested.value = val;
+    state.loan.requestedAmount = val;
+    recalculateLoan();
+  });
+
+  rangeRequested.addEventListener('input', (e) => {
+    inputRequested.value = e.target.value;
+    state.loan.requestedAmount = parseFloat(e.target.value) || 0;
+    recalculateLoan();
+  });
+
+  inputTenure.addEventListener('input', (e) => {
+    const years = parseInt(e.target.value) || 1;
+    labelTenure.innerText = `${years} Year${years > 1 ? 's' : ''}`;
+    state.loan.tenure = years;
+    recalculateLoan();
+  });
+
+  // Enable button checking
+  const checkUploadStatus = () => {
+    if (state.loan.deedUploaded && state.loan.photoUploaded) {
+      btnSanction.disabled = false;
+      btnSanction.innerText = "GENERATE DIGITAL SANCTION LETTER";
+      const hdrBadge = document.getElementById('badge-loan-hdr');
+      if (hdrBadge) {
+        hdrBadge.innerText = "VALIDATED FOR SANCTION";
+        hdrBadge.className = "badge badge-green";
+      }
+    }
+  };
+
+  // Trigger Deed verification
+  const verifyDeed = () => {
+    deedLabel.innerText = "📄 deed_verified_certified.pdf (Loaded)";
+    deedUpload.style.borderColor = "var(--accent-green)";
+    state.loan.deedUploaded = true;
+    logEvent('SECURITY', 'Property deed uploaded and verified. Escrow checksum check: PASS.');
+    checkUploadStatus();
+  };
+
+  btnDeed.addEventListener('click', (e) => {
+    e.stopPropagation();
+    verifyDeed();
+  });
+
+  // Drag-and-drop deed visual binding
+  deedUpload.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    deedUpload.style.background = "rgba(0, 242, 254, 0.08)";
+  });
+  deedUpload.addEventListener('dragleave', () => {
+    deedUpload.style.background = "rgba(0, 242, 254, 0.02)";
+  });
+  deedUpload.addEventListener('drop', (e) => {
+    e.preventDefault();
+    deedUpload.style.background = "rgba(0, 242, 254, 0.02)";
+    verifyDeed();
+  });
+
+  // Trigger Photo verification & EXIF scanning
+  const verifyPhoto = () => {
+    photoUpload.classList.add('hidden');
+    scannerContainer.classList.remove('hidden');
+    speakPrompt('Site photo upload received. Parsing coordinates from metadata.');
+
+    setTimeout(() => {
+      scannerContainer.classList.add('hidden');
+      photoUpload.classList.remove('hidden');
+      photoLabel.innerText = "📸 site_survey_north_elevation.jpg (Parsed)";
+      photoUpload.style.borderColor = "var(--accent-green)";
+      exifPanel.classList.remove('hidden');
+      
+      const dateStr = getTimestamp();
+      exifTime.innerText = dateStr;
+      
+      state.loan.photoUploaded = true;
+      state.loan.gpsTimestamp = dateStr;
+      state.loan.coordinates = 'Lat: 11.3410° N, Long: 77.7172° E';
+      state.loan.accuracy = '±3.2 meters (Verified)';
+
+      logEvent('SECURITY', 'Site photo EXIF metadata scanned. Extracted GPS: Lat: 11.3410 N, Long: 77.7172 E.');
+      checkUploadStatus();
+    }, 2000);
+  };
+
+  btnPhoto.addEventListener('click', (e) => {
+    e.stopPropagation();
+    verifyPhoto();
+  });
+
+  // Drag-and-drop photo visual binding
+  photoUpload.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    photoUpload.style.background = "rgba(0, 242, 254, 0.08)";
+  });
+  photoUpload.addEventListener('dragleave', () => {
+    photoUpload.style.background = "rgba(0, 242, 254, 0.02)";
+  });
+  photoUpload.addEventListener('drop', (e) => {
+    e.preventDefault();
+    photoUpload.style.background = "rgba(0, 242, 254, 0.02)";
+    verifyPhoto();
+  });
+
+  // Sanction generation trigger
+  btnSanction.addEventListener('click', () => {
+    const { totalValuation, requested, emi } = recalculateLoan();
+    
+    // Generate random 4-digit ID
+    const randomId = Math.floor(1000 + Math.random() * 8999);
+    const suffix = state.user.pan ? state.user.pan.substring(5, 9) : "SOC";
+    const refNum = `NHBS-PL-${randomId}-${suffix}`;
+    
+    sanctionRefNo.innerText = `REF: ${refNum}`;
+    sanctionName.innerText = state.user.name || "Karthikeya Manikandan S";
+    sanctionToken.innerText = state.user.authToken || "[Aadhaar_Auth_Token_Verified]";
+    sanctionCoords.innerText = state.loan.coordinates;
+    sanctionGpsAccuracy.innerText = state.loan.accuracy;
+    sanctionPropVal.innerText = formatCurrency(totalValuation);
+    sanctionLoanAmount.innerText = formatCurrency(requested);
+    sanctionLtvRatio.innerText = `${((requested / totalValuation) * 100).toFixed(2)}%`;
+    sanctionEmi.innerText = `${formatCurrency(emi)} / Month`;
+
+    // Show letter
+    sanctionContainer.classList.remove('hidden');
+    sanctionContainer.scrollIntoView({ behavior: 'smooth' });
+
+    // Voice notifications
+    let voiceText = '';
+    if (state.speech.lang === 'ta-IN') {
+      voiceText = `சொத்து மதிப்பு ${formatCurrency(totalValuation)} ஆக சரிபார்க்கப்பட்டது. வரம்புபடுத்தப்பட்ட கடன் தொகை ${formatCurrency(requested)} அங்கீகரிக்கப்பட்டுள்ளது.`;
+    } else if (state.speech.lang === 'hi-IN') {
+      voiceText = `संपत्ति का मूल्य ${formatCurrency(totalValuation)} रुपये सत्यापित किया गया है। स्वीकृत ऋण सीमा ${formatCurrency(requested)} रुपये अधिकृत की गई है।`;
+    } else {
+      voiceText = `Property valuation verified at ${formatCurrency(totalValuation)}. Approved loan limit capped at ${formatCurrency(requested)} has been authorized.`;
+    }
+    speakPrompt(voiceText);
+
+    logEvent('TRANSACTION', `AI Geotagged Loan Sanctioned: Amount ${formatCurrency(requested)}, LTV: ${((requested / totalValuation) * 100).toFixed(2)}%, Ref: ${refNum}.`);
+  });
+
+  // Listen to Sanction Details click
+  btnSanctionSpeak.addEventListener('click', () => {
+    const { requested, emi } = recalculateLoan();
+    let readText = '';
+    if (state.speech.lang === 'ta-IN') {
+      readText = `கடன் ஒப்புதல் அறிக்கை. கடன் வாங்குபவர் ${state.user.name}. அனுமதிக்கப்பட்ட கடன் தொகை ${formatCurrency(requested)}. வட்டி விகிதம் எட்டு புள்ளி ஐந்து சதவீதம். மாத தவணை ${formatCurrency(emi)}.`;
+    } else if (state.speech.lang === 'hi-IN') {
+      readText = `ऋण मंजूरी ज्ञापन। उधारकर्ता ${state.user.name} है। स्वीकृत ऋण राशि ${formatCurrency(requested)} रुपये है। ब्याज दर आठ दशमलव का पांच प्रतिशत है। मासिक ईएमआई ${formatCurrency(emi)} रुपये है।`;
+    } else {
+      readText = `Loan sanction memorandum details. Borrower is ${state.user.name}. Sanctioned loan principal is ${formatCurrency(requested)} at fixed interest rate of eight point five percent per annum. Monthly installment is ${formatCurrency(emi)}.`;
+    }
+    speakPrompt(readText);
+  });
+
+  // Trigger initial calculations
+  recalculateLoan();
+};
+
+// ----------------------------------------------------
+// 12. VIEW 11: AADHAAR BIOMETRIC VAULT LOCKER
 // ----------------------------------------------------
 const initVaultLocker = () => {
   const pinReadout = document.getElementById('pin-readout');
@@ -944,6 +1229,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initChatbot();
   initTaxationEngine();
   initPortfolioAdvisor();
+  initLoanSystem();
   initVaultLocker();
   startSystemClock();
 });
