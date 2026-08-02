@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NHBS - Non-Human Banking System | HackFusion 2026</title>
+  <title>NHBS - Non-Human Banking System</title>
   <!-- Google Fonts for futuristic cyberpunk aesthetic -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,10 +15,7 @@
   <!-- VIEW 1: Customer Onboarding & Biometric Gate Login (Initial Overlay) -->
   <div id="onboarding-overlay" class="overlay">
     <div class="overlay-content glass-card">
-      <div class="hackathon-badge">
-        <span class="pulse-indicator"></span>
-        HACKFUSION 2026 | BYTE BUILDERS
-      </div>
+
       <h1 class="glow-text">NHBS</h1>
       <p class="subtitle">NON-HUMAN BANKING SYSTEM</p>
       <p class="desc">Autonomous Banking Interface. Initialize credentials for biometric gateway entry.</p>
@@ -51,6 +48,9 @@
 
         <div class="biometric-trigger-container">
           <p class="security-note">🔒 SECURITY PROTOCOL: Verification is conducted via synthetic token validation. Raw Aadhaar numbers are never collected.</p>
+          <div class="onboarding-voice-intro" style="margin-bottom: 12px; text-align: center;">
+            <button type="button" id="btn-speak-onboarding" class="btn btn-sm btn-outline btn-voice">🔊 Hear Onboarding Instructions</button>
+          </div>
           <div class="scanner-wrapper">
             <button type="button" id="biometric-scanner-btn" class="scanner-btn" aria-label="Aadhaar Biometric Scan">
               <svg viewBox="0 0 24 24" class="fingerprint-svg">
@@ -127,10 +127,7 @@
         <span class="brand-sub">Non-Human Banking</span>
       </div>
 
-      <div class="team-meta">
-        <div class="meta-title">HACKFUSION 2026</div>
-        <div class="team-name">Byte Builders</div>
-      </div>
+
 
       <nav class="sidebar-nav">
         <button class="nav-link active" data-tab="dashboard" id="nav-dashboard">
@@ -394,8 +391,9 @@
                 <div id="door-scanner-status" class="door-overlay-status text-red">SECURE GATE LOCKED</div>
               </div>
               
-              <div class="door-manual-controls">
+              <div class="door-manual-controls" style="display: flex; gap: 12px; justify-content: center; width: 100%;">
                 <button id="btn-toggle-door" class="btn btn-red">TRIGGER DOOR OPEN</button>
+                <button id="btn-speak-doors" class="btn btn-sm btn-outline btn-voice">🔊 Speak Gate Telemetry</button>
               </div>
             </div>
 
@@ -537,7 +535,10 @@
             <!-- Chat Input -->
             <form id="chatbot-form" class="chat-input-area" onsubmit="return false;">
               <input type="text" id="chat-input" placeholder="Type your banking prompt (e.g. 'I want to invest ₹50,000' or 'Open vault')" required autocomplete="off">
-              <button type="submit" id="btn-submit-chat" class="btn btn-purple">CLASSIFY INTENT & ROUTE</button>
+              <div class="chat-input-actions" style="display: flex; gap: 10px; width: 100%; margin-top: 10px;">
+                <button type="submit" id="btn-submit-chat" class="btn btn-purple" style="flex: 1;">CLASSIFY INTENT & ROUTE</button>
+                <button type="button" id="btn-speak-chat" class="btn btn-sm btn-outline btn-voice" style="padding: 10px 16px;">🔊 Speak Response</button>
+              </div>
             </form>
           </div>
         </section>
@@ -545,15 +546,17 @@
         <!-- VIEW 7: AI Tax Management & Ledger Stream -->
         <section id="view-taxation" class="tab-panel">
           <div class="section-header">
-            <h2>AI Tax Management & Spending Rule Engine</h2>
-            <span class="badge badge-yellow" id="badge-tax-view-mode">AUTOMATED ENGINE IDLE</span>
+            <h2>AI Tax Management & Ledger Stream</h2>
+            <span class="badge badge-yellow" id="badge-tax-view-mode">ANNUAL MANUAL FILING ACTIVE</span>
           </div>
 
-          <div class="taxation-layout-grid">
-            
-            <!-- VIEW 7: Ledger and Return Filing -->
+          <div class="taxation-layout-grid-single">
+            <!-- Ledger and Return Filing -->
             <div class="glass-card taxation-card">
-              <h3 class="glow-text">View 7: Annual Income Ledger & Tax Return filing</h3>
+              <div class="card-header-with-btn">
+                <h3 class="glow-text">View 7: Annual Income Ledger & Tax Return filing</h3>
+                <button id="btn-speak-tax-status" class="btn btn-sm btn-outline btn-voice">🔊 Listen to Ledger</button>
+              </div>
               <p class="desc">Review annual income metrics and deductions. Instantly submit forms under Option A rules.</p>
               
               <div class="income-ledger-grid">
@@ -597,10 +600,22 @@
                 </div>
               </div>
             </div>
+          </div>
+        </section>
 
-            <!-- VIEW 8: Spending-Based Automated Micro-Tax Rule Engine -->
+        <!-- VIEW 8: Spending-Based Automated Micro-Tax Rule Engine -->
+        <section id="view-microtax" class="tab-panel">
+          <div class="section-header">
+            <h2>Spending-Based Automated Micro-Tax Engine</h2>
+            <span class="badge badge-yellow" id="badge-microtax-view-mode">AUTOMATED ENGINE IDLE</span>
+          </div>
+
+          <div class="taxation-layout-grid-single">
             <div class="glass-card taxation-card">
-              <h3 class="glow-text">View 8: Spending Simulator & Micro-Tax Engine</h3>
+              <div class="card-header-with-btn">
+                <h3 class="glow-text">View 8: Spending Simulator & Micro-Tax Engine</h3>
+                <button id="btn-speak-microtax-status" class="btn btn-sm btn-outline btn-voice">🔊 Listen to Rule Set</button>
+              </div>
               <p class="desc">Generate banking transactions. The engine computes GST rules and debits micro-tax automatically if Option B is active.</p>
 
               <div class="spending-simulation-triggers">
@@ -610,8 +625,17 @@
                 <button class="spend-btn btn-service" data-category="Service" data-amount="12000" data-item="Co-working Cloud Subscription">
                   Simulate Service Spend (₹12,000)<br><small>18% GST rule</small>
                 </button>
+                <button class="spend-btn btn-standard" data-category="Standard" data-amount="3500" data-item="Smart Holographic Terminal">
+                  Simulate Standard Spend (₹3,500)<br><small>12% GST rule</small>
+                </button>
                 <button class="spend-btn btn-essential" data-category="Essential" data-amount="1200" data-item="Bio-Sensor Medical Kit">
                   Simulate Essential Spend (₹1,200)<br><small>5% GST rule</small>
+                </button>
+                <button class="spend-btn btn-precious" data-category="Precious" data-amount="50000" data-item="24K Gold Sovereign Coin">
+                  Simulate Precious Spend (₹50,000)<br><small>3% GST rule</small>
+                </button>
+                <button class="spend-btn btn-exempt" data-category="Exempt" data-amount="450" data-item="Organic Nutrient Capsule">
+                  Simulate Exempt Spend (₹450)<br><small>0% GST rule</small>
                 </button>
               </div>
 
@@ -620,7 +644,10 @@
                 <ul class="rule-list">
                   <li><span class="category-indicator luxury"></span> Luxury Goods & Services -> <strong>28% GST</strong></li>
                   <li><span class="category-indicator service"></span> Services -> <strong>18% GST</strong></li>
+                  <li><span class="category-indicator standard"></span> Standard Goods -> <strong>12% GST</strong></li>
                   <li><span class="category-indicator essential"></span> Essential Medicines / Commodities -> <strong>5% GST</strong></li>
+                  <li><span class="category-indicator precious"></span> Precious Items & Gold -> <strong>3% GST</strong></li>
+                  <li><span class="category-indicator exempt"></span> Exempted Goods -> <strong>0% GST</strong></li>
                 </ul>
               </div>
 
@@ -631,9 +658,7 @@
                   <div class="sim-empty-state">No simulated transactions generated yet. Click buttons above.</div>
                 </div>
               </div>
-
             </div>
-
           </div>
         </section>
 
@@ -921,6 +946,7 @@
                 <div class="detail-row"><span>Authentication:</span> <strong>2FA PIN + Aadhaar Bio Scan</strong></div>
                 <div class="detail-row"><span>Access Control:</span> <strong id="vault-access-level" class="text-red">UNAUTHORIZED</strong></div>
               </div>
+              <button id="btn-speak-vault" class="btn btn-sm btn-outline btn-voice" style="margin-top: 16px;">🔊 Speak Locker Status</button>
             </div>
 
             <!-- PIN Pad & Fingerprint Terminal -->
@@ -997,6 +1023,11 @@
     </main>
 
   </div>
+
+  <!-- Floating Stop Audio Widget -->
+  <button id="btn-floating-stop" class="floating-stop-btn hidden" aria-label="Stop Voice Synthesis">
+    ⏹️ Stop Audio
+  </button>
 
   <script type="module" src="app.js"></script>
 </body>
