@@ -131,8 +131,11 @@ const speakPrompt = (text, customLang = null) => {
   if (!window.speechSynthesis) return;
   if (state.speech.muted) return;
 
-  // STRICT RULE: Speech Queue Flush before firing any new speech request
+  // WORKAROUND: Cancel speech and trigger resume to unblock any stuck synthesis states in Chrome
   window.speechSynthesis.cancel();
+  if (window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+  }
 
   // Determine language dynamically if not explicitly passed
   let lang = customLang || state.speech.lang;
@@ -146,6 +149,9 @@ const speakPrompt = (text, customLang = null) => {
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = lang;
+
+  // WORKAROUND: Retain reference to utterance object to prevent Chrome garbage collection cutoff bug
+  state.speech.activeUtterance = utterance;
 
   // Find a matching voice for the target locale
   const voices = window.speechSynthesis.getVoices();
@@ -204,6 +210,7 @@ const speakPrompt = (text, customLang = null) => {
     const stopBtn = document.getElementById('btn-floating-stop');
     if (stopBtn) stopBtn.classList.add('hidden');
     state.speech.active = false;
+    state.speech.activeUtterance = null;
   };
 
   utterance.onerror = (e) => {
@@ -213,9 +220,13 @@ const speakPrompt = (text, customLang = null) => {
     const stopBtn = document.getElementById('btn-floating-stop');
     if (stopBtn) stopBtn.classList.add('hidden');
     state.speech.active = false;
+    state.speech.activeUtterance = null;
   };
 
-  window.speechSynthesis.speak(utterance);
+  // WORKAROUND: Small timeout delay between cancel() and speak() prevents Chrome race condition dropouts
+  setTimeout(() => {
+    window.speechSynthesis.speak(utterance);
+  }, 50);
 };
 
 // ----------------------------------------------------

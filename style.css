@@ -1,35 +1,35 @@
-/* NHBS Styling System - Cyberpunk Glassmorphic National DBU Portal Theme */
+/* NHBS Styling System - Premium Light Cream National DBU Theme */
 
 /* ----------------------------------------------------
    1. DESIGN SYSTEM & ROOT VARIABLES
 ---------------------------------------------------- */
 :root {
-  --bg-color: #090d16;
-  --panel-bg: rgba(12, 19, 36, 0.65);
-  --panel-bg-solid: #0d1527;
+  --bg-color: #fdfbf7; /* Premium warm light cream */
+  --panel-bg: rgba(255, 255, 255, 0.8);
+  --panel-bg-solid: #fcfaf3; /* Deep cream */
   
-  /* Required Color Palette */
-  --accent-cyan: #00f2fe;
-  --accent-cyan-glow: rgba(0, 242, 254, 0.35);
-  --accent-navy: #4facfe;
-  --accent-navy-glow: rgba(79, 172, 254, 0.35);
-  --accent-green: #00e676;
-  --accent-green-glow: rgba(0, 230, 118, 0.3);
-  --accent-gold: #ffab00;
-  --accent-gold-glow: rgba(255, 171, 0, 0.3);
-  --accent-saffron: #ff9933;
-  --accent-saffron-glow: rgba(255, 153, 51, 0.3);
+  /* Saturated Color Palette optimized for light theme contrast */
+  --accent-cyan: #0088cc; /* Deep readable cyan */
+  --accent-cyan-glow: rgba(0, 136, 204, 0.15);
+  --accent-navy: #1e3c72; /* National navy blue */
+  --accent-navy-glow: rgba(30, 60, 114, 0.15);
+  --accent-green: #008f39; /* Readable success green */
+  --accent-green-glow: rgba(0, 143, 57, 0.15);
+  --accent-gold: #c67a00; /* Amber/gold */
+  --accent-gold-glow: rgba(198, 122, 0, 0.15);
+  --accent-saffron: #d35400; /* Saffron orange */
+  --accent-saffron-glow: rgba(211, 84, 0, 0.15);
   
-  /* Additional Accents */
-  --accent-red: #ff5252;
-  --accent-red-glow: rgba(255, 82, 82, 0.35);
-  --accent-purple: #b388ff;
-  --accent-purple-glow: rgba(179, 136, 255, 0.3);
+  /* Saturated additional accents */
+  --accent-red: #d32f2f; /* Deep readable red */
+  --accent-red-glow: rgba(211, 47, 47, 0.15);
+  --accent-purple: #6200ea; /* Rich purple */
+  --accent-purple-glow: rgba(98, 0, 234, 0.15);
   
-  --text-main: #ffffff;
-  --text-muted: #8e9db5;
-  --border-color: rgba(79, 172, 254, 0.2);
-  --border-glow: rgba(0, 242, 254, 0.12);
+  --text-main: #182233; /* Dark navy charcoal for primary text */
+  --text-muted: #5e6c84; /* Slate gray for secondary text */
+  --border-color: rgba(30, 60, 114, 0.15);
+  --border-glow: rgba(0, 136, 204, 0.08);
   
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'Share Tech Mono', monospace;
@@ -70,7 +70,7 @@ body::before {
   left: 0;
   width: 100%;
   height: 100%;
-  background: radial-gradient(circle at 10% 20%, rgba(18, 26, 43, 0.8) 0%, rgba(9, 13, 22, 1) 90%);
+  background: radial-gradient(circle at 10% 20%, #fdfbf7 0%, #f5eee0 90%);
   z-index: -2;
 }
 
@@ -82,8 +82,8 @@ body::after {
   width: 100%;
   height: 100%;
   background-image: 
-    linear-gradient(rgba(18, 26, 43, 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(18, 26, 43, 0.1) 1px, transparent 1px);
+    linear-gradient(rgba(30, 60, 114, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 60, 114, 0.04) 1px, transparent 1px);
   background-size: 50px 50px;
   z-index: -1;
   pointer-events: none;
@@ -107,13 +107,13 @@ body::after {
 .text-red { color: var(--accent-red) !important; }
 .text-purple { color: var(--accent-purple) !important; }
 .text-national-gradient {
-  background: linear-gradient(90deg, var(--accent-saffron) 0%, #ffffff 50%, var(--accent-green) 100%);
+  background: linear-gradient(90deg, var(--accent-saffron) 0%, var(--accent-navy) 50%, var(--accent-green) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
 .glow-text {
-  text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
+  text-shadow: 0 0 10px rgba(30, 60, 114, 0.1);
 }
 
 /* Scrollbars */
@@ -125,7 +125,7 @@ body::after {
   background: var(--bg-color);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(79, 172, 254, 0.2);
+  background: rgba(30, 60, 114, 0.2);
   border-radius: 3px;
 }
 ::-webkit-scrollbar-thumb:hover {
@@ -142,14 +142,14 @@ body::after {
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: 24px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  box-shadow: 0 8px 32px 0 rgba(165, 155, 135, 0.15);
   position: relative;
   overflow: hidden;
-  transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
+  transition: border-color var(--transition-speed), box-shadow var(--transition-speed), background var(--transition-speed);
 }
 .glass-card:hover {
-  border-color: rgba(0, 242, 254, 0.35);
-  box-shadow: 0 8px 32px 0 rgba(0, 242, 254, 0.08);
+  border-color: rgba(30, 60, 114, 0.35);
+  box-shadow: 0 8px 32px 0 rgba(30, 60, 114, 0.08);
 }
 
 .glitch-border {
@@ -158,7 +158,7 @@ body::after {
   left: 0;
   width: 100%;
   height: 3px;
-  background: linear-gradient(90deg, var(--accent-saffron), #ffffff, var(--accent-green));
+  background: linear-gradient(90deg, var(--accent-saffron), var(--accent-navy), var(--accent-green));
 }
 
 /* Badges */
@@ -174,40 +174,40 @@ body::after {
   text-transform: uppercase;
 }
 .badge-green {
-  background: rgba(0, 230, 118, 0.15);
+  background: rgba(0, 143, 57, 0.1);
   color: var(--accent-green);
-  border: 1px solid rgba(0, 230, 118, 0.3);
+  border: 1px solid rgba(0, 143, 57, 0.2);
 }
 .badge-cyan {
-  background: rgba(0, 242, 254, 0.15);
+  background: rgba(0, 136, 204, 0.1);
   color: var(--accent-cyan);
-  border: 1px solid rgba(0, 242, 254, 0.3);
+  border: 1px solid rgba(0, 136, 204, 0.2);
 }
 .badge-accent {
-  background: rgba(79, 172, 254, 0.15);
+  background: rgba(30, 60, 114, 0.08);
   color: var(--accent-navy);
-  border: 1px solid rgba(79, 172, 254, 0.3);
+  border: 1px solid rgba(30, 60, 114, 0.2);
 }
 .badge-red {
-  background: rgba(255, 82, 82, 0.15);
+  background: rgba(211, 47, 47, 0.1);
   color: var(--accent-red);
-  border: 1px solid rgba(255, 82, 82, 0.3);
+  border: 1px solid rgba(211, 47, 47, 0.2);
 }
 .badge-yellow {
-  background: rgba(255, 171, 0, 0.15);
+  background: rgba(198, 122, 0, 0.1);
   color: var(--accent-gold);
-  border: 1px solid rgba(255, 171, 0, 0.3);
+  border: 1px solid rgba(198, 122, 0, 0.2);
 }
 .badge-purple {
-  background: rgba(179, 136, 255, 0.15);
+  background: rgba(98, 0, 234, 0.08);
   color: var(--accent-purple);
-  border: 1px solid rgba(179, 136, 255, 0.3);
+  border: 1px solid rgba(98, 0, 234, 0.2);
 }
 
 /* Buttons */
 .btn {
-  background: rgba(79, 172, 254, 0.1);
-  color: #ffffff;
+  background: rgba(30, 60, 114, 0.06);
+  color: var(--text-main);
   border: 1px solid var(--border-color);
   padding: 12px 24px;
   border-radius: var(--border-radius-md);
@@ -224,7 +224,8 @@ body::after {
 }
 .btn:hover:not(:disabled) {
   background: var(--accent-navy);
-  border-color: var(--accent-cyan);
+  border-color: var(--accent-navy);
+  color: #ffffff;
   box-shadow: 0 0 15px var(--accent-navy-glow);
   transform: translateY(-1px);
 }
@@ -237,32 +238,32 @@ body::after {
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, var(--accent-navy) 0%, rgba(0, 242, 254, 0.8) 100%);
-  border: 1px solid var(--accent-cyan);
-  color: #090d16;
+  background: linear-gradient(135deg, var(--accent-navy) 0%, var(--accent-cyan) 100%);
+  border: 1px solid var(--accent-navy);
+  color: #ffffff;
   font-weight: 700;
 }
 .btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, rgba(0, 242, 254, 0.9) 0%, var(--accent-navy) 100%);
+  background: linear-gradient(135deg, var(--accent-cyan) 0%, var(--accent-navy) 100%);
   color: #ffffff;
-  box-shadow: 0 0 20px var(--accent-cyan-glow);
+  box-shadow: 0 0 20px var(--accent-navy-glow);
 }
 
 .btn-green {
-  background: rgba(0, 230, 118, 0.15);
-  border-color: rgba(0, 230, 118, 0.4);
+  background: rgba(0, 143, 57, 0.1);
+  border-color: rgba(0, 143, 57, 0.25);
   color: var(--accent-green);
 }
 .btn-green:hover:not(:disabled) {
   background: var(--accent-green);
-  color: #090d16;
+  color: #ffffff;
   border-color: var(--accent-green);
   box-shadow: 0 0 15px var(--accent-green-glow);
 }
 
 .btn-red {
-  background: rgba(255, 82, 82, 0.15);
-  border-color: rgba(255, 82, 82, 0.4);
+  background: rgba(211, 47, 47, 0.1);
+  border-color: rgba(211, 47, 47, 0.25);
   color: var(--accent-red);
 }
 .btn-red:hover:not(:disabled) {
@@ -273,20 +274,20 @@ body::after {
 }
 
 .btn-cyan {
-  background: rgba(0, 242, 254, 0.15);
-  border-color: rgba(0, 242, 254, 0.4);
+  background: rgba(0, 136, 204, 0.1);
+  border-color: rgba(0, 136, 204, 0.25);
   color: var(--accent-cyan);
 }
 .btn-cyan:hover:not(:disabled) {
   background: var(--accent-cyan);
-  color: #090d16;
+  color: #ffffff;
   border-color: var(--accent-cyan);
   box-shadow: 0 0 15px var(--accent-cyan-glow);
 }
 
 .btn-blue {
-  background: rgba(68, 138, 255, 0.15);
-  border-color: rgba(68, 138, 255, 0.4);
+  background: rgba(30, 60, 114, 0.08);
+  border-color: rgba(30, 60, 114, 0.25);
   color: var(--accent-navy);
 }
 .btn-blue:hover:not(:disabled) {
@@ -297,13 +298,13 @@ body::after {
 }
 
 .btn-purple {
-  background: rgba(179, 136, 255, 0.15);
-  border-color: rgba(179, 136, 255, 0.4);
+  background: rgba(98, 0, 234, 0.08);
+  border-color: rgba(98, 0, 234, 0.25);
   color: var(--accent-purple);
 }
 .btn-purple:hover:not(:disabled) {
   background: var(--accent-purple);
-  color: #090d16;
+  color: #ffffff;
   border-color: var(--accent-purple);
   box-shadow: 0 0 15px var(--accent-purple-glow);
 }
@@ -314,11 +315,12 @@ body::after {
 }
 .btn-outline {
   background: transparent;
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(24, 34, 51, 0.15);
 }
 .btn-outline:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(24, 34, 51, 0.04);
+  border-color: rgba(24, 34, 51, 0.3);
+  color: var(--text-main);
   box-shadow: none;
 }
 .btn-full-width {
@@ -342,9 +344,9 @@ body::after {
 .form-group input[type="text"],
 .form-group input[type="number"],
 .form-group textarea {
-  background: rgba(9, 13, 22, 0.6);
+  background: #ffffff;
   border: 1px solid var(--border-color);
-  color: #ffffff;
+  color: var(--text-main);
   padding: 12px 16px;
   border-radius: var(--border-radius-md);
   font-family: var(--font-sans);
@@ -355,7 +357,7 @@ body::after {
 .form-group input:focus,
 .form-group textarea:focus {
   border-color: var(--accent-cyan);
-  box-shadow: 0 0 10px rgba(0, 242, 254, 0.15);
+  box-shadow: 0 0 10px rgba(0, 136, 204, 0.15);
 }
 .form-row {
   display: flex;
@@ -367,9 +369,9 @@ body::after {
 }
 
 .form-input-dropdown {
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
   border: 1px solid var(--border-color);
-  color: #ffffff;
+  color: var(--text-main);
   padding: 12px;
   border-radius: var(--border-radius-md);
   font-size: 13px;
@@ -399,7 +401,7 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #090d16;
+  background: #f5eee0;
   overflow: hidden;
   transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out;
 }
@@ -409,18 +411,18 @@ body::after {
   top: 0;
   width: 50vw;
   height: 100vh;
-  background: #0d1527;
-  border-color: rgba(79, 172, 254, 0.3);
+  background: #eae3d2;
+  border-color: rgba(30, 60, 114, 0.15);
   z-index: 1;
   transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
 .left-gate {
   left: 0;
-  border-right: 2px solid var(--accent-cyan);
+  border-right: 2px solid var(--accent-navy);
 }
 .right-gate {
   right: 0;
-  border-left: 2px solid var(--accent-cyan);
+  border-left: 2px solid var(--accent-navy);
 }
 
 .gate-stripes {
@@ -448,7 +450,7 @@ body::after {
   max-width: 540px;
   position: relative;
   z-index: 2;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  box-shadow: 0 10px 40px rgba(165, 155, 135, 0.25);
   animation: cardFadeIn 0.8s ease-out;
   transition: opacity 0.6s ease-in;
 }
@@ -488,8 +490,8 @@ body::after {
 .security-note {
   font-size: 11px;
   color: var(--text-muted);
-  background: rgba(9, 13, 22, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid var(--border-color);
   padding: 10px 14px;
   border-radius: var(--border-radius-md);
   margin-bottom: 16px;
@@ -514,7 +516,7 @@ body::after {
   width: 90px;
   height: 90px;
   border-radius: 50%;
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
   border: 2px solid var(--border-color);
   position: relative;
   cursor: pointer;
@@ -551,7 +553,7 @@ body::after {
   right: -10px;
   bottom: -10px;
   border-radius: 50%;
-  border: 1px dashed rgba(79, 172, 254, 0.3);
+  border: 1px dashed rgba(30, 60, 114, 0.3);
   pointer-events: none;
   animation: spin 10s linear infinite;
 }
@@ -582,7 +584,7 @@ body::after {
 
 .scanner-btn.verified {
   border-color: var(--accent-green);
-  background: rgba(0, 230, 118, 0.15);
+  background: rgba(0, 143, 57, 0.1);
 }
 .scanner-btn.verified .fingerprint-svg {
   fill: var(--accent-green);
@@ -597,7 +599,7 @@ body::after {
   letter-spacing: 2px;
   font-weight: 700;
   color: var(--text-muted);
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.05);
+  text-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
 .status-msg {
@@ -627,13 +629,14 @@ dialog {
 }
 
 dialog::backdrop {
-  background: rgba(5, 7, 12, 0.85);
+  background: rgba(165, 155, 135, 0.4);
   backdrop-filter: blur(8px);
 }
 
 .modal-content {
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-  border-color: rgba(79, 172, 254, 0.35);
+  box-shadow: 0 20px 60px rgba(165, 155, 135, 0.3);
+  border-color: rgba(30, 60, 114, 0.25);
+  background: #fdfbf7;
 }
 
 .modal-header {
@@ -666,7 +669,7 @@ dialog::backdrop {
 }
 
 .tax-option-card .card-inner {
-  background: rgba(9, 13, 22, 0.6);
+  background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: 16px 20px;
@@ -680,9 +683,9 @@ dialog::backdrop {
   width: 44px;
   height: 44px;
   border-radius: var(--border-radius-md);
-  background: rgba(79, 172, 254, 0.15);
-  color: var(--accent-cyan);
-  border: 1px solid rgba(0, 242, 254, 0.3);
+  background: rgba(30, 60, 114, 0.08);
+  color: var(--accent-navy);
+  border: 1px solid rgba(30, 60, 114, 0.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -699,6 +702,7 @@ dialog::backdrop {
   font-size: 15px;
   font-weight: 700;
   margin-bottom: 4px;
+  color: var(--text-main);
   transition: color var(--transition-speed);
 }
 
@@ -711,24 +715,24 @@ dialog::backdrop {
 
 /* Radio select states */
 .tax-option-card:hover .card-inner {
-  border-color: rgba(0, 242, 254, 0.4);
-  background: rgba(9, 13, 22, 0.8);
+  border-color: rgba(30, 60, 114, 0.4);
+  background: #fbf9f4;
 }
 
 .tax-option-card input[type="radio"]:checked + .card-inner {
-  border-color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.05);
-  box-shadow: 0 0 15px rgba(0, 242, 254, 0.08);
+  border-color: var(--accent-navy);
+  background: rgba(30, 60, 114, 0.04);
+  box-shadow: 0 0 15px rgba(30, 60, 114, 0.08);
 }
 
 .tax-option-card input[type="radio"]:checked + .card-inner .option-letter {
-  background: var(--accent-cyan);
-  color: #090d16;
-  border-color: var(--accent-cyan);
+  background: var(--accent-navy);
+  color: #ffffff;
+  border-color: var(--accent-navy);
 }
 
 .tax-option-card input[type="radio"]:checked + .card-inner h3 {
-  color: var(--accent-cyan);
+  color: var(--accent-navy);
 }
 
 .modal-actions {
@@ -749,19 +753,19 @@ dialog::backdrop {
 /* Sidebar Navigation Panel */
 .sidebar {
   width: 280px;
-  background-color: rgba(5, 7, 12, 0.95);
+  background-color: #eae3d2;
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   height: 100%;
   flex-shrink: 0;
   z-index: 100;
-  box-shadow: 5px 0 25px rgba(0, 0, 0, 0.6);
+  box-shadow: 5px 0 25px rgba(165, 155, 135, 0.15);
 }
 
 .sidebar-brand {
   padding: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(30, 60, 114, 0.1);
 }
 
 .logo-box {
@@ -816,14 +820,14 @@ dialog::backdrop {
   width: 18px;
   height: 18px;
   fill: currentColor;
-  opacity: 0.6;
+  opacity: 0.7;
   transition: opacity var(--transition-speed), fill var(--transition-speed);
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.03);
-  color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.4);
+  color: var(--text-main);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .nav-link:hover .nav-icon {
@@ -831,14 +835,14 @@ dialog::backdrop {
 }
 
 .nav-link.active {
-  background: rgba(79, 172, 254, 0.12);
-  color: var(--accent-cyan);
-  border-color: rgba(0, 242, 254, 0.25);
-  box-shadow: 0 0 10px rgba(0, 242, 254, 0.04);
+  background: #ffffff;
+  color: var(--accent-navy);
+  border-color: var(--border-color);
+  box-shadow: 0 4px 12px rgba(165, 155, 135, 0.1);
 }
 
 .nav-link.active .nav-icon {
-  fill: var(--accent-cyan);
+  fill: var(--accent-navy);
   opacity: 1;
 }
 
@@ -851,8 +855,8 @@ dialog::backdrop {
 
 .sidebar-footer {
   padding: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
-  background: rgba(9, 13, 22, 0.4);
+  border-top: 1px solid rgba(30, 60, 114, 0.1);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .dev-list {
@@ -878,27 +882,18 @@ dialog::backdrop {
   font-family: var(--font-display);
   font-weight: 700;
   color: var(--text-muted);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(30, 60, 114, 0.15);
   padding: 2px 6px;
   border-radius: var(--border-radius-sm);
-  background: rgba(0, 0, 0, 0.2);
+  background: #ffffff;
 }
 
 /* ----------------------------------------------------
-   7. MAIN CONTENT AREA
+   7. TOP BAR SYSTEM
 ---------------------------------------------------- */
-.content-area {
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
-}
-
 .top-bar {
   height: 80px;
-  background-color: rgba(5, 7, 12, 0.85);
+  background-color: rgba(255, 255, 255, 0.85);
   border-bottom: 1px solid var(--border-color);
   padding: 0 32px;
   display: flex;
@@ -908,6 +903,7 @@ dialog::backdrop {
   -webkit-backdrop-filter: blur(12px);
   z-index: 90;
   flex-shrink: 0;
+  box-shadow: 0 4px 20px rgba(165, 155, 135, 0.05);
 }
 
 .user-profile-summary {
@@ -930,7 +926,7 @@ dialog::backdrop {
 .profile-pic-g {
   font-weight: 900;
   font-size: 13px;
-  color: #090d16;
+  color: #1e3c72;
 }
 
 .profile-name {
@@ -951,23 +947,24 @@ dialog::backdrop {
 }
 
 .metric-card {
-  background: rgba(9, 13, 22, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   padding: 8px 16px;
   border-radius: var(--border-radius-md);
   display: flex;
   flex-direction: column;
   min-width: 140px;
   transition: all var(--transition-speed);
+  box-shadow: 0 2px 8px rgba(165, 155, 135, 0.05);
 }
 
 .editable-balance-trigger {
   cursor: pointer;
-  border-color: rgba(0, 242, 254, 0.15);
+  border-color: rgba(30, 60, 114, 0.25);
 }
 .editable-balance-trigger:hover {
   border-color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.05);
+  background: #fbf9f4;
 }
 
 .metric-label {
@@ -1004,9 +1001,9 @@ dialog::backdrop {
 }
 
 .direct-input {
-  background: #090d16;
+  background: #ffffff;
   border: 1px solid var(--accent-cyan);
-  color: #ffffff;
+  color: var(--text-main);
   padding: 2px 6px;
   border-radius: var(--border-radius-sm);
   font-family: var(--font-mono);
@@ -1026,15 +1023,15 @@ dialog::backdrop {
 }
 
 .btn-voice-toggle {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
+  border-color: var(--border-color);
   padding: 6px 12px;
   font-size: 11px;
 }
 .btn-voice-toggle.muted {
   border-color: var(--accent-red);
   color: var(--accent-red);
-  background: rgba(255, 82, 82, 0.05);
+  background: rgba(211, 47, 47, 0.05);
 }
 
 .network-badge {
@@ -1043,10 +1040,10 @@ dialog::backdrop {
   display: flex;
   align-items: center;
   gap: 6px;
-  background: rgba(9, 13, 22, 0.6);
+  background: #ffffff;
   padding: 6px 12px;
   border-radius: var(--border-radius-sm);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
 }
 
 .pulse-dot {
@@ -1061,7 +1058,7 @@ dialog::backdrop {
 }
 
 /* ----------------------------------------------------
-   8. VIEW VIEWPORT & NAVIGATION SYSTEM
+   8. VIEW PORT PORTALS
 ---------------------------------------------------- */
 .view-viewport {
   flex-grow: 1;
@@ -1083,7 +1080,7 @@ dialog::backdrop {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 24px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 16px;
 }
 
@@ -1106,7 +1103,7 @@ dialog::backdrop {
 }
 
 /* ----------------------------------------------------
-   9. VIEW 3: DASHBOARD STYLING
+   9. VIEW 3: DASHBOARD CARD DESIGN
 ---------------------------------------------------- */
 .customer-profile-card {
   margin-bottom: 32px;
@@ -1174,19 +1171,20 @@ dialog::backdrop {
   gap: 24px;
   margin-top: 24px;
   padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-color);
   flex-wrap: wrap;
 }
 
 .benchmark-chip {
-  background: rgba(9, 13, 22, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   padding: 8px 16px;
   border-radius: var(--border-radius-md);
   font-size: 11px;
   display: flex;
   gap: 8px;
   align-items: center;
+  box-shadow: 0 2px 6px rgba(165, 155, 135, 0.03);
 }
 
 .benchmark-chip span {
@@ -1210,7 +1208,7 @@ dialog::backdrop {
   display: flex;
   gap: 20px;
   cursor: pointer;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 24px rgba(165, 155, 135, 0.1);
   position: relative;
   overflow: hidden;
   transition: all var(--transition-speed) ease;
@@ -1223,15 +1221,16 @@ dialog::backdrop {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.02) 0%, transparent 100%);
+  background: linear-gradient(135deg, rgba(30, 60, 114, 0.02) 0%, transparent 100%);
   opacity: 0;
   transition: opacity var(--transition-speed);
 }
 
 .module-nav-card:hover {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 8px 32px rgba(0, 242, 254, 0.06);
+  border-color: var(--accent-navy);
+  box-shadow: 0 8px 32px rgba(30, 60, 114, 0.08);
   transform: translateY(-2px);
+  background: #ffffff;
 }
 
 .module-nav-card:hover::before {
@@ -1242,18 +1241,18 @@ dialog::backdrop {
   width: 48px;
   height: 48px;
   border-radius: var(--border-radius-md);
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(30, 60, 114, 0.05);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border-color);
   transition: background var(--transition-speed), border-color var(--transition-speed);
 }
 
 .module-nav-card:hover .module-card-icon {
-  background: rgba(0, 242, 254, 0.05);
-  border-color: rgba(0, 242, 254, 0.3);
+  background: rgba(30, 60, 114, 0.08);
+  border-color: var(--accent-navy);
 }
 
 .module-card-icon svg {
@@ -1276,7 +1275,7 @@ dialog::backdrop {
   transition: color var(--transition-speed);
 }
 .module-nav-card:hover h4 {
-  color: var(--accent-cyan);
+  color: var(--accent-navy);
 }
 
 .module-card-info p {
@@ -1311,7 +1310,7 @@ dialog::backdrop {
 }
 
 /* ----------------------------------------------------
-   10. VIEW 4: SERVO DOOR ACCESS & TELEMETRY
+   10. VIEW 4: DOOR TELEMETRY & GATE CONTROL
 ---------------------------------------------------- */
 .telemetry-layout {
   display: grid;
@@ -1332,19 +1331,19 @@ dialog::backdrop {
   width: 100%;
   max-width: 440px;
   height: 260px;
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
   border: 4px solid var(--accent-navy);
   border-radius: var(--border-radius-md);
   position: relative;
   overflow: hidden;
-  box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(79, 172, 254, 0.15);
+  box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.05), 0 0 20px rgba(30, 60, 114, 0.1);
 }
 
 .sliding-door {
   width: 50%;
   height: 100%;
-  background: #0d1527;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #eae3d2;
+  border: 1px solid rgba(255, 255, 255, 0.5);
   position: absolute;
   top: 0;
   z-index: 3;
@@ -1356,11 +1355,11 @@ dialog::backdrop {
 
 .left-door {
   left: 0;
-  border-right: 2px solid var(--accent-cyan);
+  border-right: 2px solid var(--accent-navy);
 }
 .right-door {
   right: 0;
-  border-left: 2px solid var(--accent-cyan);
+  border-left: 2px solid var(--accent-navy);
 }
 
 .door-cyber-design {
@@ -1373,8 +1372,8 @@ dialog::backdrop {
 .door-line {
   width: 40px;
   height: 2px;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 8px var(--accent-cyan);
+  background: var(--accent-navy);
+  box-shadow: 0 0 8px rgba(30, 60, 114, 0.2);
 }
 
 .door-status-text {
@@ -1392,7 +1391,7 @@ dialog::backdrop {
   z-index: 2;
   background-image: repeating-linear-gradient(90deg, transparent 0px, transparent 18px, var(--accent-red) 19px, var(--accent-red) 20px);
   opacity: 0.65;
-  box-shadow: inset 0 0 20px rgba(255, 82, 82, 0.1);
+  box-shadow: inset 0 0 20px rgba(211, 47, 47, 0.1);
   transition: opacity 0.5s ease;
 }
 
@@ -1405,11 +1404,11 @@ dialog::backdrop {
   font-size: 11px;
   letter-spacing: 2px;
   font-weight: 700;
-  background: #090d16;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   padding: 6px 16px;
   border-radius: var(--border-radius-sm);
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 4px 10px rgba(165, 155, 135, 0.15);
 }
 
 /* Door control transition states */
@@ -1465,8 +1464,8 @@ dialog::backdrop {
 }
 
 .sensor-logs {
-  background: rgba(9, 13, 22, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   padding: 12px;
   height: 150px;
@@ -1474,6 +1473,7 @@ dialog::backdrop {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .sensor-log-item {
@@ -1483,7 +1483,7 @@ dialog::backdrop {
 }
 
 .log-time {
-  color: var(--accent-cyan);
+  color: var(--accent-navy);
 }
 
 /* ----------------------------------------------------
@@ -1505,8 +1505,8 @@ dialog::backdrop {
 }
 
 .voice-wave-container {
-  background: rgba(9, 13, 22, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   padding: 16px;
   margin-bottom: 16px;
@@ -1558,9 +1558,9 @@ dialog::backdrop {
 }
 
 .preset-speech-btn {
-  background: rgba(9, 13, 22, 0.6);
+  background: #ffffff;
   border: 1px solid var(--border-color);
-  color: #ffffff;
+  color: var(--text-main);
   padding: 12px;
   border-radius: var(--border-radius-md);
   text-align: left;
@@ -1570,12 +1570,12 @@ dialog::backdrop {
   transition: all var(--transition-speed);
 }
 .preset-speech-btn:hover {
-  border-color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.05);
+  border-color: var(--accent-navy);
+  background: rgba(30, 60, 114, 0.04);
 }
 
 /* ----------------------------------------------------
-   12. VIEW 6: AI HELP DESK & BOT CHAT
+   12. VIEW 6: AI HELP DESK & CHATBOT
 ---------------------------------------------------- */
 .chatbot-container {
   max-width: 800px;
@@ -1592,7 +1592,7 @@ dialog::backdrop {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(9, 13, 22, 0.4);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .bot-info {
@@ -1606,11 +1606,11 @@ dialog::backdrop {
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(179, 136, 255, 0.15);
+  background: rgba(98, 0, 234, 0.08);
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(179, 136, 255, 0.3);
+  border: 1px solid rgba(98, 0, 234, 0.2);
 }
 
 .bot-info h4 {
@@ -1628,8 +1628,8 @@ dialog::backdrop {
 .intent-indicator {
   font-size: 11px;
   color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.05);
-  border: 1px solid rgba(0, 242, 254, 0.2);
+  background: rgba(0, 136, 204, 0.05);
+  border: 1px solid rgba(0, 136, 204, 0.2);
   padding: 4px 10px;
   border-radius: var(--border-radius-sm);
 }
@@ -1641,7 +1641,7 @@ dialog::backdrop {
   display: flex;
   flex-direction: column;
   gap: 16px;
-  background: rgba(5, 7, 12, 0.3);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 .chat-message {
@@ -1662,19 +1662,20 @@ dialog::backdrop {
   align-self: flex-start;
 }
 .chat-message.bot-msg p {
-  background: rgba(9, 13, 22, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  color: #ffffff;
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
   border-top-left-radius: 2px;
+  box-shadow: 0 2px 8px rgba(165, 155, 135, 0.05);
 }
 
 .chat-message.user-msg {
   align-self: flex-end;
 }
 .chat-message.user-msg p {
-  background: rgba(179, 136, 255, 0.15);
-  border: 1px solid rgba(179, 136, 255, 0.3);
-  color: #ffffff;
+  background: rgba(98, 0, 234, 0.06);
+  border: 1px solid rgba(98, 0, 234, 0.2);
+  color: var(--text-main);
   border-top-right-radius: 2px;
 }
 
@@ -1692,13 +1693,13 @@ dialog::backdrop {
   display: flex;
   gap: 8px;
   overflow-x: auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.03);
-  background: rgba(9, 13, 22, 0.2);
+  border-top: 1px solid rgba(30, 60, 114, 0.05);
+  background: rgba(255, 255, 255, 0.5);
 }
 
 .suggest-chip {
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   color: var(--text-muted);
   padding: 6px 12px;
   border-radius: 14px;
@@ -1709,23 +1710,23 @@ dialog::backdrop {
 }
 .suggest-chip:hover {
   border-color: var(--accent-purple);
-  color: #ffffff;
-  background: rgba(179, 136, 255, 0.05);
+  color: var(--accent-purple);
+  background: rgba(98, 0, 234, 0.04);
 }
 
 .chat-input-area {
   padding: 16px 24px;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   gap: 12px;
-  background: rgba(9, 13, 22, 0.4);
+  background: #ffffff;
 }
 
 .chat-input-area input {
-  background: #090d16;
+  background: var(--bg-color);
   border: 1px solid var(--border-color);
-  color: #ffffff;
+  color: var(--text-main);
   padding: 12px 16px;
   border-radius: var(--border-radius-md);
   font-size: 13px;
@@ -1743,7 +1744,7 @@ dialog::backdrop {
 }
 
 /* ----------------------------------------------------
-   13. VIEW 7 & 8: TAX LEDGER & MICRO-TAX SIMULATOR
+   13. VIEW 7 & 8: TAX LEDGER & AUTOMATED SLABS
 ---------------------------------------------------- */
 .taxation-layout-grid-single {
   max-width: 800px;
@@ -1765,14 +1766,15 @@ dialog::backdrop {
 }
 
 .income-ledger-grid {
-  background: rgba(9, 13, 22, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: 24px;
   margin: 20px 0;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  box-shadow: 0 4px 16px rgba(165, 155, 135, 0.05);
 }
 
 .ledger-row {
@@ -1787,7 +1789,7 @@ dialog::backdrop {
 
 .divider {
   border: none;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--border-color);
 }
 
 .net-row {
@@ -1795,7 +1797,7 @@ dialog::backdrop {
 }
 
 .net-row span {
-  color: #ffffff;
+  color: var(--text-main);
   font-weight: 700;
 }
 
@@ -1804,8 +1806,8 @@ dialog::backdrop {
 }
 
 .itr-receipt {
-  background: rgba(0, 230, 118, 0.03);
-  border: 1px dashed rgba(0, 230, 118, 0.4);
+  background: rgba(0, 143, 57, 0.04);
+  border: 1px dashed rgba(0, 143, 57, 0.4);
   border-radius: var(--border-radius-lg);
   padding: 24px;
   animation: slideDown 0.4s ease-out;
@@ -1815,7 +1817,7 @@ dialog::backdrop {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px dashed rgba(0, 230, 118, 0.3);
+  border-bottom: 1px dashed rgba(0, 143, 57, 0.3);
   padding-bottom: 12px;
   margin-bottom: 16px;
 }
@@ -1859,9 +1861,9 @@ dialog::backdrop {
 }
 
 .spend-btn {
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
   border: 1px solid var(--border-color);
-  color: #ffffff;
+  color: var(--text-main);
   padding: 14px;
   border-radius: var(--border-radius-lg);
   cursor: pointer;
@@ -1870,6 +1872,7 @@ dialog::backdrop {
   font-size: 12px;
   font-weight: 600;
   transition: all var(--transition-speed);
+  box-shadow: 0 2px 6px rgba(165, 155, 135, 0.04);
 }
 .spend-btn small {
   color: var(--text-muted);
@@ -1878,39 +1881,42 @@ dialog::backdrop {
 
 .spend-btn:hover {
   transform: translateY(-2px);
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(165, 155, 135, 0.08);
 }
 
 .btn-luxury:hover {
   border-color: var(--accent-red);
-  background: rgba(255, 82, 82, 0.05);
+  background: rgba(211, 47, 47, 0.02);
 }
 .btn-service:hover {
   border-color: var(--accent-purple);
-  background: rgba(179, 136, 255, 0.05);
+  background: rgba(98, 0, 234, 0.02);
 }
 .btn-standard:hover {
   border-color: var(--accent-navy);
-  background: rgba(79, 172, 254, 0.05);
+  background: rgba(30, 60, 114, 0.02);
 }
 .btn-essential:hover {
   border-color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.05);
+  background: rgba(0, 136, 204, 0.02);
 }
 .btn-precious:hover {
   border-color: var(--accent-gold);
-  background: rgba(255, 171, 0, 0.05);
+  background: rgba(198, 122, 0, 0.02);
 }
 .btn-exempt:hover {
   border-color: var(--accent-green);
-  background: rgba(0, 230, 118, 0.05);
+  background: rgba(0, 143, 57, 0.02);
 }
 
 .rule-matrix-display {
-  background: rgba(9, 13, 22, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: 20px;
   margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(165, 155, 135, 0.04);
 }
 
 .rule-matrix-display h4 {
@@ -1952,8 +1958,8 @@ dialog::backdrop {
 }
 
 .sim-ledger-list {
-  background: rgba(5, 7, 12, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   padding: 16px;
   max-height: 180px;
@@ -1961,6 +1967,7 @@ dialog::backdrop {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .sim-empty-state {
@@ -1973,7 +1980,7 @@ dialog::backdrop {
   display: flex;
   justify-content: space-between;
   font-size: 11px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   padding-bottom: 6px;
 }
 
@@ -2023,15 +2030,15 @@ dialog::backdrop {
 }
 
 .bar-val {
-  color: #ffffff;
+  color: var(--text-main);
 }
 
 .bar-track {
   height: 8px;
-  background: rgba(9, 13, 22, 0.8);
+  background: var(--bg-color);
   border-radius: 4px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
 }
 
 .bar-fill {
@@ -2065,7 +2072,7 @@ dialog::backdrop {
 }
 
 /* ----------------------------------------------------
-   15. VIEW 10: PROPERTY LOAN LTV CAPPING
+   15. VIEW 10: AI GEOTAGGED PROPERTY LOAN SYSTEM
 ---------------------------------------------------- */
 .loan-grid {
   display: grid;
@@ -2093,18 +2100,19 @@ dialog::backdrop {
   border-radius: var(--border-radius-lg);
   padding: 24px;
   text-align: center;
-  background: rgba(9, 13, 22, 0.3);
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
   cursor: pointer;
   transition: all var(--transition-speed);
+  box-shadow: 0 2px 6px rgba(165, 155, 135, 0.04);
 }
 
 .upload-slot:hover {
-  border-color: var(--accent-cyan);
-  background: rgba(0, 242, 254, 0.02);
+  border-color: var(--accent-navy);
+  background: rgba(30, 60, 114, 0.02);
 }
 
 .upload-icon {
@@ -2114,7 +2122,7 @@ dialog::backdrop {
   transition: fill var(--transition-speed);
 }
 .upload-slot:hover .upload-icon {
-  fill: var(--accent-cyan);
+  fill: var(--accent-navy);
 }
 
 .upload-label {
@@ -2128,7 +2136,7 @@ dialog::backdrop {
 }
 
 .exif-scanner-box {
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
   border: 1px solid var(--accent-cyan);
   border-radius: var(--border-radius-lg);
   padding: 24px;
@@ -2138,6 +2146,7 @@ dialog::backdrop {
   justify-content: center;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(165, 155, 135, 0.05);
 }
 
 .scanner-hologram {
@@ -2166,9 +2175,10 @@ dialog::backdrop {
 
 .exif-data-display {
   padding: 20px;
-  background: rgba(0, 242, 254, 0.02);
-  border-color: rgba(0, 242, 254, 0.25);
+  background: #ffffff;
+  border-color: var(--border-color);
   animation: slideDown 0.4s ease-out;
+  box-shadow: 0 2px 10px rgba(165, 155, 135, 0.05);
 }
 
 .exif-data-display h4 {
@@ -2193,15 +2203,15 @@ dialog::backdrop {
   color: var(--text-muted);
 }
 
-/* Calculator right side inputs */
+/* Calculator Valuation details */
 .valuation-inputs {
   display: flex;
   flex-direction: column;
 }
 
 .valuation-metrics {
-  background: rgba(9, 13, 22, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: 16px;
   margin: 16px 0;
@@ -2209,6 +2219,7 @@ dialog::backdrop {
   flex-direction: column;
   gap: 12px;
   font-size: 12px;
+  box-shadow: 0 2px 8px rgba(165, 155, 135, 0.04);
 }
 
 .val-row {
@@ -2221,7 +2232,7 @@ dialog::backdrop {
 }
 
 .text-accent-cyan {
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-color);
   padding-top: 10px;
   margin-top: 2px;
 }
@@ -2236,7 +2247,7 @@ dialog::backdrop {
   -webkit-appearance: none;
   width: 100%;
   height: 4px;
-  background: rgba(9, 13, 22, 0.8);
+  background: rgba(30, 60, 114, 0.1);
   border-radius: 2px;
   outline: none;
   margin: 12px 0;
@@ -2246,8 +2257,8 @@ dialog::backdrop {
   width: 16px;
   height: 16px;
   border-radius: 50%;
-  background: var(--accent-cyan);
-  box-shadow: 0 0 8px var(--accent-cyan);
+  background: var(--accent-navy);
+  box-shadow: 0 0 8px var(--accent-navy-glow);
   cursor: pointer;
   transition: transform 0.15s;
 }
@@ -2256,8 +2267,8 @@ dialog::backdrop {
 }
 
 .compliance-alert-box {
-  background: rgba(255, 171, 0, 0.04);
-  border: 1px solid rgba(255, 171, 0, 0.25);
+  background: rgba(198, 122, 0, 0.04);
+  border: 1px solid rgba(198, 122, 0, 0.2);
   border-radius: var(--border-radius-md);
   padding: 10px 14px;
   display: flex;
@@ -2280,7 +2291,7 @@ dialog::backdrop {
 }
 
 .emi-output-card {
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   padding: 16px;
@@ -2289,6 +2300,7 @@ dialog::backdrop {
   align-items: center;
   gap: 6px;
   margin-top: 16px;
+  box-shadow: 0 4px 12px rgba(165, 155, 135, 0.05);
 }
 
 .emi-label {
@@ -2305,11 +2317,12 @@ dialog::backdrop {
 
 /* Sanction Letter output */
 .sanction-letter-wrapper {
-  border-color: rgba(0, 242, 254, 0.3);
-  background: radial-gradient(circle at top right, rgba(0, 242, 254, 0.03) 0%, rgba(9, 13, 22, 0.8) 100%);
+  border-color: rgba(30, 60, 114, 0.25);
+  background: radial-gradient(circle at top right, rgba(30, 60, 114, 0.03) 0%, #ffffff 100%);
   position: relative;
   padding: 0;
   animation: slideDown 0.5s ease-out;
+  box-shadow: 0 10px 30px rgba(165, 155, 135, 0.15);
 }
 
 .sanction-inner {
@@ -2324,7 +2337,7 @@ dialog::backdrop {
   width: 72px;
   height: 72px;
   border-radius: 50%;
-  border: 2px dashed rgba(0, 230, 118, 0.5);
+  border: 2px dashed rgba(0, 143, 57, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -2342,7 +2355,7 @@ dialog::backdrop {
 }
 
 .sanction-header {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid var(--border-color);
   padding-bottom: 16px;
   margin-bottom: 24px;
 }
@@ -2351,6 +2364,7 @@ dialog::backdrop {
   font-family: var(--font-display);
   font-size: 14px;
   letter-spacing: 1px;
+  color: var(--text-main);
 }
 
 .sanction-ref {
@@ -2380,11 +2394,12 @@ dialog::backdrop {
   font-weight: 700;
   display: block;
   margin-bottom: 12px;
+  color: var(--text-main);
 }
 
 .s-val-code {
   font-size: 11px;
-  color: var(--accent-cyan);
+  color: var(--accent-navy);
   display: block;
 }
 
@@ -2392,17 +2407,18 @@ dialog::backdrop {
   font-size: 11px;
   color: var(--text-muted);
   line-height: 1.5;
-  background: rgba(9, 13, 22, 0.5);
+  background: var(--bg-color);
   padding: 12px;
   border-radius: var(--border-radius-md);
   margin-bottom: 24px;
+  border: 1px solid var(--border-color);
 }
 
 .sanction-footer {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  border-top: 1px solid var(--border-color);
   padding-top: 20px;
 }
 
@@ -2415,7 +2431,7 @@ dialog::backdrop {
 .signature-line {
   width: 140px;
   height: 1px;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(30, 60, 114, 0.15);
   margin-bottom: 4px;
 }
 
@@ -2430,7 +2446,7 @@ dialog::backdrop {
 }
 
 /* ----------------------------------------------------
-   16. VIEW 11: AADHAAR VAULT LOCKER
+   16. VIEW 11: VAULT LOCKER CARD
 ---------------------------------------------------- */
 .vault-grid {
   display: grid;
@@ -2458,7 +2474,7 @@ dialog::backdrop {
   width: 140px;
   height: 140px;
   border-radius: 50%;
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
   border: 4px solid var(--accent-red);
   position: relative;
   display: flex;
@@ -2466,7 +2482,7 @@ dialog::backdrop {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  box-shadow: 0 0 25px rgba(255, 82, 82, 0.1);
+  box-shadow: 0 0 20px rgba(211, 47, 47, 0.05);
   transition: all 0.5s ease;
 }
 
@@ -2486,7 +2502,7 @@ dialog::backdrop {
 /* Vault unlock state */
 .vault-graphic.unlocked {
   border-color: var(--accent-green);
-  box-shadow: 0 0 30px rgba(0, 230, 118, 0.2);
+  box-shadow: 0 0 25px rgba(0, 143, 57, 0.1);
 }
 .vault-graphic.unlocked .vault-svg {
   fill: var(--accent-green);
@@ -2504,7 +2520,7 @@ dialog::backdrop {
   display: flex;
   justify-content: space-between;
   font-size: 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.03);
   padding-bottom: 8px;
 }
 
@@ -2522,19 +2538,20 @@ dialog::backdrop {
 }
 
 .pin-display {
-  background: #090d16;
+  background: #ffffff;
   border: 1px solid var(--border-color);
   border-radius: var(--border-radius-md);
   padding: 16px;
   text-align: center;
   margin-bottom: 20px;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.02);
 }
 
 .pin-stars {
   font-size: 24px;
   letter-spacing: 12px;
   font-weight: 900;
-  color: var(--accent-cyan);
+  color: var(--accent-navy);
 }
 
 .pin-grid {
@@ -2548,29 +2565,32 @@ dialog::backdrop {
 }
 
 .pin-btn {
-  background: rgba(9, 13, 22, 0.6);
+  background: #ffffff;
   border: 1px solid var(--border-color);
-  color: #ffffff;
+  color: var(--text-main);
   height: 52px;
   border-radius: var(--border-radius-md);
   cursor: pointer;
   font-size: 16px;
   font-weight: 700;
   transition: all var(--transition-speed);
+  box-shadow: 0 2px 6px rgba(165, 155, 135, 0.04);
 }
 .pin-btn:hover {
-  background: rgba(79, 172, 254, 0.1);
-  border-color: var(--accent-cyan);
+  background: rgba(30, 60, 114, 0.04);
+  border-color: var(--accent-navy);
 }
 
 .btn-clear:hover {
-  background: rgba(255, 82, 82, 0.15);
+  background: rgba(211, 47, 47, 0.06);
   border-color: var(--accent-red);
+  color: var(--accent-red);
 }
 
 .btn-enter:hover {
-  background: rgba(0, 230, 118, 0.15);
+  background: rgba(0, 143, 57, 0.06);
   border-color: var(--accent-green);
+  color: var(--accent-green);
 }
 
 .vault-scanner-sec {
@@ -2578,10 +2598,11 @@ dialog::backdrop {
   align-items: center;
   gap: 16px;
   padding: 16px;
-  background: rgba(9, 13, 22, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: #ffffff;
+  border: 1px solid var(--border-color);
   border-radius: var(--border-radius-lg);
   transition: opacity 0.3s;
+  box-shadow: 0 2px 6px rgba(165, 155, 135, 0.03);
 }
 
 .vault-scanner-sec.disabled {
@@ -2603,17 +2624,18 @@ dialog::backdrop {
    17. VIEW 12: AUDIT LEDGER TERMINAL
 ---------------------------------------------------- */
 .audit-terminal-card {
-  border-color: rgba(79, 172, 254, 0.35);
+  border-color: var(--border-color);
   padding: 0;
+  box-shadow: 0 8px 30px rgba(165, 155, 135, 0.1);
 }
 
 .terminal-header {
   padding: 14px 20px;
-  border-bottom: 1px solid rgba(79, 172, 254, 0.25);
+  border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(9, 13, 22, 0.8);
+  background: #ffffff;
 }
 
 .terminal-indicator {
@@ -2628,18 +2650,19 @@ dialog::backdrop {
   font-size: 11px;
   letter-spacing: 1px;
   font-weight: 700;
+  color: var(--text-main);
 }
 
 .terminal-net-status {
   font-size: 10px;
-  color: var(--accent-cyan);
+  color: var(--accent-navy);
 }
 
 .terminal-body {
   height: 420px;
   overflow-y: auto;
   padding: 20px;
-  background: rgba(5, 7, 12, 0.9);
+  background: #ffffff;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -2663,25 +2686,25 @@ dialog::backdrop {
   flex-shrink: 0;
   font-size: 11px;
 }
-.tag-system { color: var(--accent-cyan); }
+.tag-system { color: var(--accent-navy); }
 .tag-security { color: var(--accent-red); }
 .tag-tax { color: var(--accent-gold); }
 .tag-trans { color: var(--accent-green); }
 .tag-vault { color: var(--accent-purple); }
 
 .terminal-row .msg {
-  color: #ffffff;
+  color: var(--text-main);
   word-break: break-word;
 }
 
 /* ----------------------------------------------------
-   18. FLOATING AUDIO CONTROLLER WIDGET
+   18. FLOATING AUDIO STOP WIDGET
 ---------------------------------------------------- */
 .floating-stop-btn {
   position: fixed;
   bottom: 24px;
   right: 24px;
-  background: var(--panel-bg-solid);
+  background: #ffffff;
   border: 1px solid var(--accent-red);
   color: var(--accent-red);
   padding: 10px 16px;
@@ -2690,7 +2713,7 @@ dialog::backdrop {
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 15px rgba(165, 155, 135, 0.25);
   z-index: 500;
   display: flex;
   align-items: center;
@@ -2746,9 +2769,9 @@ dialog::backdrop {
 }
 
 @keyframes pulseScan {
-  0% { box-shadow: 0 0 5px rgba(0, 242, 254, 0.2); }
-  50% { box-shadow: 0 0 15px rgba(0, 242, 254, 0.5); }
-  100% { box-shadow: 0 0 5px rgba(0, 242, 254, 0.2); }
+  0% { box-shadow: 0 0 5px rgba(211, 47, 47, 0.1); }
+  50% { box-shadow: 0 0 15px rgba(211, 47, 47, 0.35); }
+  100% { box-shadow: 0 0 5px rgba(211, 47, 47, 0.1); }
 }
 
 @keyframes scaleGlow {
