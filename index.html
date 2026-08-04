@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NHBS - Non-Human Banking System</title>
-  <!-- Google Fonts for futuristic cyberpunk aesthetic -->
+  <title>NHBS - NATIONAL DIGITAL BANKING UNIT</title>
+  <!-- Google Fonts for premium national fintech aesthetic -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Orbitron:wght@400;500;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
@@ -14,43 +14,84 @@
 
   <!-- VIEW 1: Customer Onboarding & Biometric Gate Login (Initial Overlay) -->
   <div id="onboarding-overlay" class="overlay">
-    <div class="overlay-content glass-card">
+    <!-- Physical sliding gate simulator overlay panels for gate animation -->
+    <div class="onboarding-gate left-gate" id="onboarding-gate-left">
+      <div class="gate-stripes"></div>
+    </div>
+    <div class="onboarding-gate right-gate" id="onboarding-gate-right">
+      <div class="gate-stripes"></div>
+    </div>
 
-      <h1 class="glow-text">NHBS</h1>
-      <p class="subtitle">NON-HUMAN BANKING SYSTEM</p>
-      <p class="desc">Autonomous Banking Interface. Initialize credentials for biometric gateway entry.</p>
+    <!-- Onboarding Card Content -->
+    <div class="overlay-content glass-card" id="onboarding-card">
+      <div class="national-emblem-container">
+        <!-- Ashok Chakra SVG Crest -->
+        <svg class="ashok-chakra spin-slow" viewBox="0 0 100 100" width="60" height="60">
+          <circle cx="50" cy="50" r="46" stroke="#4facfe" stroke-width="3" fill="none" stroke-dasharray="290" />
+          <circle cx="50" cy="50" r="6" fill="#4facfe" />
+          <g stroke="#4facfe" stroke-width="1.5">
+            <line x1="50" y1="50" x2="50" y2="8" /><line x1="50" y1="50" x2="50" y2="92" />
+            <line x1="50" y1="50" x2="8" y2="50" /><line x1="50" y1="50" x2="92" y2="50" />
+            <line x1="50" y1="50" x2="20.5" y2="20.5" /><line x1="50" y1="50" x2="79.5" y2="79.5" />
+            <line x1="50" y1="50" x2="79.5" y2="20.5" /><line x1="50" y1="50" x2="20.5" y2="79.5" />
+            <line x1="50" y1="50" x2="35.3" y2="12.3" /><line x1="50" y1="50" x2="64.7" y2="87.7" />
+            <line x1="50" y1="50" x2="64.7" y2="12.3" /><line x1="50" y1="50" x2="35.3" y2="87.7" />
+            <line x1="50" y1="50" x2="12.3" y2="35.3" /><line x1="50" y1="50" x2="87.7" y2="64.7" />
+            <line x1="50" y1="50" x2="87.7" y2="35.3" /><line x1="50" y1="50" x2="12.3" y2="64.7" />
+            <line x1="50" y1="50" x2="27.4" y2="15.8" /><line x1="50" y1="50" x2="72.6" y2="84.2" />
+            <line x1="50" y1="50" x2="72.6" y2="15.8" /><line x1="50" y1="50" x2="27.4" y2="84.2" />
+            <line x1="50" y1="50" x2="15.8" y2="27.4" /><line x1="50" y1="50" x2="84.2" y2="72.6" />
+            <line x1="50" y1="50" x2="84.2" y2="27.4" /><line x1="50" y1="50" x2="15.8" y2="72.6" />
+          </g>
+        </svg>
+      </div>
+
+      <h1 class="glow-text text-national-gradient">NHBS</h1>
+      <p class="subtitle font-orbitron">NATIONAL DIGITAL BANKING UNIT</p>
+      <p class="desc">Biometric Identity Gateway. Initialize credentials to generate your synthetic verification token.</p>
 
       <form id="onboarding-form" onsubmit="return false;">
         <div class="form-group">
           <label for="input-name">Full Name</label>
-          <input type="text" id="input-name" placeholder="Karthikeya Manikandan S" required>
+          <input type="text" id="input-name" value="Karthikeya Manikandan S" required>
         </div>
+        
         <div class="form-row">
           <div class="form-group">
             <label for="input-account">Bank Account Number</label>
-            <input type="text" id="input-account" placeholder="100984728912" required pattern="[0-9]{9,18}">
+            <input type="text" id="input-account" value="SB-IND-9874102938" required>
           </div>
           <div class="form-group">
             <label for="input-bank">Bank Name</label>
-            <input type="text" id="input-bank" placeholder="State Bank of India" required>
-          </div>
-        </div>
-        <div class="form-row">
-          <div class="form-group">
-            <label for="input-branch">Branch Name</label>
-            <input type="text" id="input-branch" placeholder="School of Computing Yard" required>
-          </div>
-          <div class="form-group">
-            <label for="input-pan">PAN Card Number</label>
-            <input type="text" id="input-pan" placeholder="ABCDE1234F" required pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}">
+            <input type="text" id="input-bank" value="State Bank Ecosystem" required>
           </div>
         </div>
 
-        <div class="biometric-trigger-container">
-          <p class="security-note">🔒 SECURITY PROTOCOL: Verification is conducted via synthetic token validation. Raw Aadhaar numbers are never collected.</p>
-          <div class="onboarding-voice-intro" style="margin-bottom: 12px; text-align: center;">
-            <button type="button" id="btn-speak-onboarding" class="btn btn-sm btn-outline btn-voice">🔊 Hear Onboarding Instructions</button>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="input-branch">Branch Name</label>
+            <input type="text" id="input-branch" value="Coimbatore Main DBU" required>
           </div>
+          <div class="form-group">
+            <label for="input-pan">PAN Identifier</label>
+            <input type="text" id="input-pan" value="ABCDE1234F" required pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="input-balance">Starting Account Balance (₹)</label>
+          <input type="number" id="input-balance" value="248500" min="0" step="100" required>
+        </div>
+
+        <div class="biometric-trigger-container">
+          <p class="security-note">
+            <span class="shield-icon">🛡️</span> DPDP COMPLIANCE PROTOCOL: Raw Aadhaar numbers are never collected or displayed. Credentials verify into tokenized placeholders.
+          </p>
+          
+          <div class="onboarding-voice-intro">
+            <button type="button" id="btn-speak-onboarding" class="btn btn-sm btn-outline btn-voice">🔊 Listen Onboarding Help</button>
+          </div>
+
           <div class="scanner-wrapper">
             <button type="button" id="biometric-scanner-btn" class="scanner-btn" aria-label="Aadhaar Biometric Scan">
               <svg viewBox="0 0 24 24" class="fingerprint-svg">
@@ -62,34 +103,34 @@
               <div class="scanner-glow"></div>
               <div class="scanner-ring"></div>
             </button>
-            <span class="scanner-label">TAP TO SCAN BIOMETRICS</span>
+            <span class="scanner-label font-orbitron">TAP TO SCAN CREDENTIALS</span>
           </div>
         </div>
 
-        <div id="onboarding-status" class="status-msg">Awaiting Aadhaar Biometric Scan...</div>
+        <div id="onboarding-status" class="status-msg font-mono">Awaiting Aadhaar Biometric Scan...</div>
       </form>
     </div>
   </div>
 
-  <!-- VIEW 2: Smart Tax Framework Selection Modal -->
+  <!-- VIEW 2: Tax Framework Selection Modal -->
   <dialog id="tax-framework-modal" closedby="any" aria-labelledby="tax-modal-title">
     <div class="modal-content glass-card">
       <div class="modal-header">
-        <h2 id="tax-modal-title" class="glow-text">Smart Tax Framework</h2>
-        <span class="badge badge-accent">PAN VALIDATED</span>
+        <h2 id="tax-modal-title" class="glow-text text-national-gradient">National Smart Tax Framework</h2>
+        <span class="badge badge-green">PAN VALIDATED</span>
       </div>
-      <p class="modal-desc">Please choose your operational tax framework mode. This configures how NHBS interfaces with government tax protocols.</p>
+      <p class="modal-desc font-sans">Choose your tax deduction architecture. The NHBS engine will automatically apply compliance rules for your chosen framework.</p>
       
       <div class="tax-options-container">
         <!-- Option A Card -->
         <label class="tax-option-card">
           <input type="radio" name="tax-mode-selection" value="A" checked>
           <div class="card-inner">
-            <span class="option-letter">A</span>
+            <span class="option-letter font-orbitron">A</span>
             <div class="option-details">
-              <h3>AI Tax Filing System</h3>
-              <p>Review annual transactional ledger details and file tax returns with 1-click. Ideal for manual validation advocates.</p>
-              <span class="badge badge-green">Annual Return File</span>
+              <h3>AI Tax Filing Engine</h3>
+              <p>Maintains a localized ledger of transactional flow. Compiles annual forms and files ITRs with 1-click manual consent.</p>
+              <span class="badge badge-green">Annual Return Filing</span>
             </div>
           </div>
         </label>
@@ -98,18 +139,18 @@
         <label class="tax-option-card">
           <input type="radio" name="tax-mode-selection" value="B">
           <div class="card-inner">
-            <span class="option-letter">B</span>
+            <span class="option-letter font-orbitron">B</span>
             <div class="option-details">
-              <h3>Automated Micro-Tax Engine</h3>
-              <p>Continuous tax computation and automatic background debiting on every transaction based on GST slabs. Fully autonomous.</p>
-              <span class="badge badge-accent">Continuous Real-Time Debit</span>
+              <h3>Spending Micro-Tax Engine</h3>
+              <p>Continuous background tax validation. Auto-debits exact micro-tax GST calculations from the ledger on every spend.</p>
+              <span class="badge badge-cyan">Continuous Auto-Debit</span>
             </div>
           </div>
         </label>
       </div>
 
       <div class="modal-actions">
-        <button id="confirm-tax-framework-btn" class="btn btn-primary">CONFIRM & SECURE ACCESS</button>
+        <button id="confirm-tax-framework-btn" class="btn btn-primary font-orbitron">SECURE INITIALIZATION</button>
       </div>
     </div>
   </dialog>
@@ -121,13 +162,21 @@
     <aside class="sidebar">
       <div class="sidebar-brand">
         <div class="logo-box">
-          <span class="logo-accent"></span>
-          NHBS
+          <!-- Ashok Chakra Mini Crest -->
+          <svg class="ashok-chakra-mini" viewBox="0 0 100 100" width="22" height="22">
+            <circle cx="50" cy="50" r="46" stroke="#4facfe" stroke-width="4" fill="none" />
+            <circle cx="50" cy="50" r="8" fill="#4facfe" />
+            <g stroke="#4facfe" stroke-width="2">
+              <line x1="50" y1="50" x2="50" y2="8" /><line x1="50" y1="50" x2="50" y2="92" />
+              <line x1="50" y1="50" x2="8" y2="50" /><line x1="50" y1="50" x2="92" y2="50" />
+              <line x1="50" y1="50" x2="20.5" y2="20.5" /><line x1="50" y1="50" x2="79.5" y2="79.5" />
+              <line x1="50" y1="50" x2="79.5" y2="20.5" /><line x1="50" y1="50" x2="20.5" y2="79.5" />
+            </g>
+          </svg>
+          <span class="logo-text text-national-gradient">NHBS</span>
         </div>
-        <span class="brand-sub">Non-Human Banking</span>
+        <span class="brand-sub font-orbitron">NATIONAL DIGITAL BANKING UNIT</span>
       </div>
-
-
 
       <nav class="sidebar-nav">
         <button class="nav-link active" data-tab="dashboard" id="nav-dashboard">
@@ -149,7 +198,11 @@
         </button>
         <button class="nav-link" data-tab="taxation" id="nav-taxation">
           <svg class="nav-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
-          Tax & Rules
+          ITR Tax Ledger
+        </button>
+        <button class="nav-link" data-tab="microtax" id="nav-microtax">
+          <svg class="nav-icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+          Micro-Tax Engine
         </button>
         <button class="nav-link" data-tab="wealth" id="nav-wealth">
           <svg class="nav-icon" viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
@@ -171,12 +224,15 @@
         </button>
       </nav>
 
+      <!-- Sidebar Compliance & Dev Info -->
       <div class="sidebar-footer">
-        <div class="dev-list">
-          <div class="dev-item"><strong>Karthikeya M S</strong> (Lead)</div>
-          <div class="dev-item"><strong>Mohammad Sameer A</strong> (Fullstack)</div>
-          <div class="dev-item"><strong>John Joshwa R</strong> (IoT)</div>
-          <div class="dev-item"><strong>Sri Ram K</strong> (Security)</div>
+        <div class="dev-list font-sans">
+          <div class="dev-item">👤 <strong>Karthikeya Manikandan S</strong> (Lead)</div>
+          <div class="dev-item">⚡ <strong>Coimbatore DBU Ecosystem</strong></div>
+        </div>
+        <div class="badge-stack">
+          <span class="micro-compliance-badge">RBI / DBU / 2026</span>
+          <span class="micro-compliance-badge">NPCI PAY_RAIL</span>
         </div>
       </div>
     </aside>
@@ -188,26 +244,46 @@
       <header class="top-bar">
         <div class="user-profile-summary">
           <div class="profile-pic">
-            <span class="profile-pic-g">AI</span>
+            <span class="profile-pic-g font-orbitron">IN</span>
           </div>
           <div>
-            <div id="top-bar-name" class="profile-name">Karthikeya Manikandan S</div>
-            <div id="top-bar-auth-token" class="profile-token">Synthetic Token: [Aadhaar_Auth_Token_Verified]</div>
+            <div id="top-bar-name" class="profile-name font-sans">Karthikeya Manikandan S</div>
+            <div id="top-bar-auth-token" class="profile-token font-mono">Token: [Aadhaar_eKYC_Token_Verified]</div>
           </div>
         </div>
 
         <div class="live-metrics">
-          <div class="metric-card">
-            <span class="metric-label">ACCOUNT BALANCE</span>
-            <span id="metric-balance" class="metric-val text-green">₹1,00,000.00</span>
+          <div class="metric-card editable-balance-trigger" id="balance-card-trigger" title="Click to edit balance">
+            <div class="metric-header-row">
+              <span class="metric-label font-orbitron">BANK BALANCE ✏️</span>
+            </div>
+            <div class="balance-display-container">
+              <span id="metric-balance" class="metric-val text-green font-mono">₹2,48,500.00</span>
+              <div id="balance-input-container" class="balance-edit-box hidden">
+                <input type="number" id="balance-direct-input" step="1000" class="direct-input">
+                <button id="btn-save-balance" class="btn btn-sm btn-green">Save</button>
+              </div>
+            </div>
           </div>
+          
           <div class="metric-card">
-            <span class="metric-label">TAX PAID TO POOL</span>
-            <span id="metric-tax-paid" class="metric-val text-accent">₹0.00</span>
+            <span class="metric-label font-orbitron">TAX DEBITED POOL</span>
+            <span id="metric-tax-paid" class="metric-val text-accent font-mono">₹0.00</span>
           </div>
+
           <div class="metric-card">
-            <span class="metric-label">TAX FRAMEWORK</span>
-            <span id="metric-tax-mode" class="metric-val mode-badge">OPTION A</span>
+            <span class="metric-label font-orbitron">ACTIVE FRAMEWORK</span>
+            <span id="metric-tax-mode" class="metric-val mode-badge font-orbitron">OPTION A</span>
+          </div>
+        </div>
+
+        <!-- Telemetry & Settings controls -->
+        <div class="top-bar-controls">
+          <button id="btn-global-mute" class="btn btn-sm btn-voice-toggle font-orbitron">
+            <span class="toggle-icon">🔊</span> Voice: ON
+          </button>
+          <div class="network-badge font-mono" id="network-telemetry">
+            <span class="pulse-dot green"></span> TLS 1.3 | 12ms
           </div>
         </div>
       </header>
@@ -215,145 +291,188 @@
       <!-- LIVE VIEWS WRAPPER -->
       <div class="view-viewport">
 
-        <!-- VIEW 3: Central Smart Branch Dashboard -->
+        <!-- VIEW 3: National DBU Dashboard -->
         <section id="view-dashboard" class="tab-panel active">
           <div class="section-header">
-            <h2>Central Smart Branch Dashboard</h2>
-            <span class="timestamp-realtime" id="dashboard-clock">2026-07-25 00:40:00</span>
+            <div>
+              <h2 class="text-national-gradient">National Digital DBU Dashboard</h2>
+              <p class="section-desc">RBI DBU Certified Digital System. Coimbatore Main Ecosystem portal.</p>
+            </div>
+            <span class="timestamp-realtime font-mono" id="dashboard-clock">2026-08-05 00:36:10</span>
           </div>
 
           <!-- Customer Header Card -->
           <div class="glass-card customer-profile-card">
             <div class="glitch-border"></div>
             <div class="profile-header">
-              <h3 class="glow-text">ACTIVE CUSTOMER CREDENTIAL MATRIX</h3>
-              <span class="system-status-indicator"><span class="pulse-indicator green"></span> SYSTEM INTEGRATED</span>
+              <h3 class="glow-text text-national-gradient">ACTIVE SECURITY CREDENTIAL MATRIX</h3>
+              <span class="system-status-indicator font-mono">
+                <span class="pulse-indicator green"></span> SYSTEM INTEGRATED
+              </span>
             </div>
             <div class="profile-details-grid">
               <div class="detail-item">
                 <span class="item-label">FULL NAME</span>
-                <span class="item-value" id="card-name">-</span>
+                <span class="item-value font-sans" id="card-name">Karthikeya Manikandan S</span>
               </div>
               <div class="detail-item">
                 <span class="item-label">BANK ACCOUNT NO</span>
-                <span class="item-value" id="card-account">-</span>
+                <span class="item-value font-mono" id="card-account">SB-IND-9874102938</span>
               </div>
               <div class="detail-item">
-                <span class="item-label">BANK NAME</span>
-                <span class="item-value" id="card-bank">-</span>
+                <span class="item-label">BANK & BRANCH</span>
+                <span class="item-value font-sans" id="card-bank">State Bank Ecosystem / Coimbatore Main DBU</span>
               </div>
               <div class="detail-item">
-                <span class="item-label">BRANCH</span>
-                <span class="item-value" id="card-branch">-</span>
+                <span class="item-label">PAN IDENTIFIER</span>
+                <span class="item-value font-mono" id="card-pan">ABCDE1234F</span>
               </div>
               <div class="detail-item">
-                <span class="item-label">PAN CARD NO</span>
-                <span class="item-value" id="card-pan">-</span>
+                <span class="item-label">SECURITY VERIFICATION</span>
+                <span class="item-value font-mono text-cyan" id="card-token">[Aadhaar_eKYC_Token_Verified]</span>
               </div>
               <div class="detail-item">
-                <span class="item-label">TAX FRAMEWORK MODE</span>
-                <span class="item-value text-accent" id="card-tax-mode">-</span>
+                <span class="item-label">TAX FRAMEWORK</span>
+                <span class="item-value text-accent font-orbitron" id="card-tax-mode">OPTION A (Filing)</span>
+              </div>
+            </div>
+
+            <!-- Dynamic live benchmarks row -->
+            <div class="dashboard-benchmarks-row">
+              <div class="benchmark-chip">
+                <span>Gold Rate Benchmark (24K):</span>
+                <strong class="text-gold font-mono" id="bench-gold">₹6,850.00 / g</strong>
+              </div>
+              <div class="benchmark-chip">
+                <span>Property Rate Guideline:</span>
+                <strong class="text-cyan font-mono">₹4,200.00 / sq.ft</strong>
+              </div>
+              <div class="benchmark-chip">
+                <span>RBI Repo Rate:</span>
+                <strong class="text-green font-mono">6.50%</strong>
               </div>
             </div>
           </div>
 
-          <!-- Interactive Module Grid -->
+          <!-- Interactive Module Grid (8 main services cards) -->
           <div class="modules-grid">
             
+            <!-- Gate Telemetry -->
             <div class="module-nav-card" data-target="doors">
               <div class="module-card-icon text-accent">
                 <svg viewBox="0 0 24 24"><path d="M19 4H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-8 14H5V6h6v12zm8 0h-6V6h6v12z"/></svg>
               </div>
               <div class="module-card-info">
-                <h4>Gate & Doors Telemetry</h4>
+                <h4>Servo Gate Telemetry</h4>
                 <p>Monitor physical sliding door coordinates and access laser configurations.</p>
                 <div class="module-status-badge">
-                  <span class="status-dot green" id="dot-dash-door-active"></span>
-                  <span id="badge-dash-door">DOORS CLOSED</span>
+                  <span class="status-dot red" id="dot-dash-door-active"></span>
+                  <span id="badge-dash-door" class="font-mono">GATE SECURED</span>
                 </div>
               </div>
             </div>
 
+            <!-- Voice Hub -->
             <div class="module-nav-card" data-target="voice">
               <div class="module-card-icon text-green">
                 <svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm5.3-3c0 3-2.54 5.1-5.3 5.1S6.7 14 6.7 11H5c0 3.42 2.72 6.2 6 6.72V21h2v-3.28c3.28-.52 6-3.3 6-6.72h-1.7z"/></svg>
               </div>
               <div class="module-card-info">
-                <h4>Speech Synthesis Voice Hub</h4>
-                <p>Configure automated banking prompts and audio verification languages.</p>
+                <h4>Multilingual Voice Hub</h4>
+                <p>Configure automated banking prompts and select regional synthesizers.</p>
                 <div class="module-status-badge">
                   <span class="status-dot green"></span>
-                  <span>VOICE ACTIVE</span>
+                  <span class="font-mono">TTS VOICES STANDBY</span>
                 </div>
               </div>
             </div>
 
+            <!-- AI Help Desk -->
             <div class="module-nav-card" data-target="chatbot">
               <div class="module-card-icon text-purple">
                 <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 9h12v2H6V9zm8 5H6v-2h8v2zm4-6H6V6h12v2z"/></svg>
               </div>
               <div class="module-card-info">
-                <h4>AI Help Desk Chat</h4>
-                <p>Interact with our automatic command router and intent classification engine.</p>
+                <h4>AI Intent Router</h4>
+                <p>Chat with the helpdesk router to automatically redirect consoles between nodes.</p>
                 <div class="module-status-badge">
                   <span class="status-dot green"></span>
-                  <span>HELPDESK ONLINE</span>
+                  <span class="font-mono">ROUTER ONLINE</span>
                 </div>
               </div>
             </div>
 
+            <!-- Tax Management -->
             <div class="module-nav-card" data-target="taxation">
               <div class="module-card-icon text-yellow">
                 <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>
               </div>
               <div class="module-card-info">
-                <h4>Automated Tax Framework</h4>
-                <p>Simulate transaction spending, calculate custom GST slabs, and view return logs.</p>
+                <h4>AI Tax Return Filing</h4>
+                <p>Submit annual returns, review gross inflows, and print digital receipts.</p>
                 <div class="module-status-badge">
                   <span class="status-dot green"></span>
-                  <span id="badge-dash-tax">RULE MATRIX RUNNING</span>
+                  <span id="badge-dash-tax" class="font-mono">ITR-LEDGER ACTIVE</span>
                 </div>
               </div>
             </div>
 
+            <!-- Micro-Tax Rule Engine -->
+            <div class="module-nav-card" data-target="microtax">
+              <div class="module-card-icon text-cyan">
+                <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+              </div>
+              <div class="module-card-info">
+                <h4>Micro-Tax Rule Simulator</h4>
+                <p>Simulate purchases (5% to 28% GST) and execute automated transaction debits.</p>
+                <div class="module-status-badge">
+                  <span class="status-dot green"></span>
+                  <span class="font-mono">MATRIX COMPILED</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Wealth Advisor -->
             <div class="module-nav-card" data-target="wealth">
               <div class="module-card-icon text-blue">
                 <svg viewBox="0 0 24 24"><path d="M16 6l2.29 2.29-4.88 4.88-4-4L2 16.59 3.41 18l6-6 4 4 6.3-6.29L22 12V6z"/></svg>
               </div>
               <div class="module-card-info">
-                <h4>AI Portfolio Advisor</h4>
-                <p>Calculate optimal risk-hedged splits dynamically on monthly saving values.</p>
+                <h4>AI Wealth Allocator</h4>
+                <p>Structure monthly savings dynamically into a 3-tier risk-hedged split portfolio.</p>
                 <div class="module-status-badge">
                   <span class="status-dot green"></span>
-                  <span>ADVICE GENERATED</span>
+                  <span class="font-mono">OPTIMIZER STANDBY</span>
                 </div>
               </div>
             </div>
 
+            <!-- Property Loan -->
             <div class="module-nav-card" data-target="loan">
               <div class="module-card-icon text-cyan">
                 <svg viewBox="0 0 24 24"><path d="M12 3L2 12h3v8h14v-8h3L12 3zm0 5c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm-5 10c0-2.5 4-3.9 5-3.9s5 1.4 5 3.9H7z"/></svg>
               </div>
               <div class="module-card-info">
-                <h4>AI Property Loan</h4>
-                <p>Verify site EXIF data, calculate guidelines, and apply with strict 50% LTV limits.</p>
+                <h4>Geotagged Property Loan</h4>
+                <p>Upload deeds, parse site survey EXIF tags, and calculate loans with strict LTV limits.</p>
                 <div class="module-status-badge">
                   <span class="status-dot green"></span>
-                  <span>50% LTV CAP ACTIVE</span>
+                  <span class="font-mono">50% LTV ENFORCED</span>
                 </div>
               </div>
             </div>
 
+            <!-- Vault Locker -->
             <div class="module-nav-card" data-target="vault">
               <div class="module-card-icon text-red">
                 <svg viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
               </div>
               <div class="module-card-info">
-                <h4>Aadhaar Biometric Locker</h4>
-                <p>Access safe deposit locker vaults using a two-factor passcode and fingerprint ring.</p>
+                <h4>Biometric Vault Locker</h4>
+                <p>Access safe deposit vault locker via 2FA passcodes and fingerprint scanning.</p>
                 <div class="module-status-badge">
                   <span class="status-dot red" id="dot-dash-vault"></span>
-                  <span id="badge-dash-vault">SECURELY LOCKED</span>
+                  <span id="badge-dash-vault" class="font-mono">VAULT LOCKED</span>
                 </div>
               </div>
             </div>
@@ -361,11 +480,14 @@
           </div>
         </section>
 
-        <!-- VIEW 4: Automatic Door System & Hardware Telemetry -->
+        <!-- VIEW 4: Automatic Gate Telemetry & Servo Door Control -->
         <section id="view-doors" class="tab-panel">
           <div class="section-header">
-            <h2>Automatic Door System & Hardware Telemetry</h2>
-            <span class="badge badge-accent">TELEMETRY STREAM: RUNNING</span>
+            <div>
+              <h2 class="text-national-gradient">Servo Gate Telemetry & Door Controls</h2>
+              <p class="section-desc">Physical access controls interfacing with digital security boundary rails.</p>
+            </div>
+            <span class="badge badge-accent">STREAMING ACTIVE</span>
           </div>
 
           <div class="telemetry-layout">
@@ -376,74 +498,77 @@
                 <div id="door-left" class="sliding-door left-door">
                   <div class="door-cyber-design">
                     <span class="door-line"></span>
-                    <span class="door-status-text">NHBS LOCK</span>
+                    <span class="door-status-text font-orbitron">NHBS LOCK</span>
                   </div>
                 </div>
                 <div id="door-right" class="sliding-door right-door">
                   <div class="door-cyber-design">
                     <span class="door-line"></span>
-                    <span class="door-status-text">NHBS LOCK</span>
+                    <span class="door-status-text font-orbitron">NHBS LOCK</span>
                   </div>
                 </div>
                 <!-- Laser beams shown when locked -->
                 <div id="laser-grid" class="laser-beams"></div>
                 <!-- Security status text overlays -->
-                <div id="door-scanner-status" class="door-overlay-status text-red">SECURE GATE LOCKED</div>
+                <div id="door-scanner-status" class="door-overlay-status text-red font-orbitron">SECURE GATE LOCKED</div>
               </div>
               
-              <div class="door-manual-controls" style="display: flex; gap: 12px; justify-content: center; width: 100%;">
-                <button id="btn-toggle-door" class="btn btn-red">TRIGGER DOOR OPEN</button>
-                <button id="btn-speak-doors" class="btn btn-sm btn-outline btn-voice">🔊 Speak Gate Telemetry</button>
+              <div class="door-manual-controls">
+                <button id="btn-toggle-door" class="btn btn-red font-orbitron">TRIGGER GATE OPEN</button>
+                <button id="btn-speak-doors" class="btn btn-sm btn-outline btn-voice">🔊 Speak Gate Status</button>
               </div>
             </div>
 
             <!-- Hardware Telemetry Gauges -->
             <div class="telemetry-info-panel">
               <div class="glass-card telemetry-card">
-                <h3>Hardware Telemetry Status</h3>
+                <h3 class="text-national-gradient">Servo Actuator Diagnostics</h3>
                 <div class="telemetry-grid">
                   <div class="telemetry-item">
-                    <span class="telemetry-label">Laser Boundary Grid</span>
-                    <span id="telem-laser" class="telemetry-val text-red">ACTIVE (HIGH VOLTAGE)</span>
+                    <span class="telemetry-label">Laser Boundary Shield</span>
+                    <span id="telem-laser" class="telemetry-val text-red font-mono">ACTIVE (HIGH VOLTAGE)</span>
                   </div>
                   <div class="telemetry-item">
-                    <span class="telemetry-label">Lock Hydraulics Pressure</span>
-                    <span id="telem-hydraulics" class="telemetry-val">420 Bar</span>
+                    <span class="telemetry-label">Hydraulic Gate Pressure</span>
+                    <span id="telem-hydraulics" class="telemetry-val font-mono">420 Bar</span>
                   </div>
                   <div class="telemetry-item">
-                    <span class="telemetry-label">Optical Alignment</span>
-                    <span class="telemetry-val text-green">100% CORRECT</span>
+                    <span class="telemetry-label">Optical Beam Alignment</span>
+                    <span class="telemetry-val text-green font-mono">100% CORRECT</span>
                   </div>
                   <div class="telemetry-item">
-                    <span class="telemetry-label">Door Controller Firmware</span>
-                    <span class="telemetry-val">NHBS-G2-v4.1</span>
+                    <span class="telemetry-label">Controller Firmware Version</span>
+                    <span class="telemetry-val font-mono">NHBS-G2-v4.1</span>
                   </div>
                 </div>
               </div>
               
               <div class="glass-card telemetry-card">
-                <h3>IoT Edge Gateway Information</h3>
-                <p class="desc">Autonomous gateway receiving sensor frames. Synchronized via Aadhaar Biometric authentications.</p>
+                <h3 class="text-national-gradient">Edge Sensor Log Stream</h3>
+                <p class="desc">Encrypted streams reporting status changes from physical gate relays.</p>
                 <div class="sensor-logs" id="sensor-telemetry-logs">
-                  <div class="sensor-log-item"><span class="log-time">[00:40:02]</span> SYSTEM INIT: Gate Controller online.</div>
-                  <div class="sensor-log-item"><span class="log-time">[00:40:05]</span> SENSOR DIAG: Infra-Red lasers calibrated.</div>
+                  <div class="sensor-log-item"><span class="log-time font-mono">[00:36:11]</span> SYSTEM INIT: Gate Controller online.</div>
+                  <div class="sensor-log-item"><span class="log-time font-mono">[00:36:14]</span> SENSOR DIAG: Infra-Red lasers calibrated.</div>
                 </div>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- VIEW 5: Multilingual AI Voice Assistant Hub -->
+        <!-- VIEW 5: Multilingual Voice AI Center -->
         <section id="view-voice" class="tab-panel">
           <div class="section-header">
-            <h2>Multilingual AI Voice Assistant Hub</h2>
+            <div>
+              <h2 class="text-national-gradient">Multilingual Voice AI Center</h2>
+              <p class="section-desc">Manage regional linguistic outputs for automated text-to-speech protocols.</p>
+            </div>
             <span class="badge badge-green">SPEECH SYNTHESIS ENGINE</span>
           </div>
 
           <div class="voice-layout">
             <!-- Language and Voice Options -->
             <div class="glass-card voice-config-card">
-              <h3>Assistant Parameters</h3>
+              <h3 class="text-national-gradient">Acoustic Configurations</h3>
               <div class="form-group">
                 <label for="select-voice-lang">Select Assistant Language</label>
                 <select id="select-voice-lang" class="form-input-dropdown">
@@ -453,8 +578,9 @@
                 </select>
               </div>
 
+              <!-- Animated Visual Waveform -->
               <div class="voice-wave-container">
-                <span class="voice-status-text" id="voice-wave-status">ASSISTANT IDLE</span>
+                <span class="voice-status-text font-orbitron" id="voice-wave-status">ASSISTANT IDLE</span>
                 <div class="waveform-animation" id="waveform">
                   <span class="wave-bar"></span>
                   <span class="wave-bar"></span>
@@ -468,16 +594,16 @@
               </div>
 
               <div class="form-group">
-                <label for="tts-manual-input">Trigger Custom Vocal Prompt</label>
-                <textarea id="tts-manual-input" rows="3" placeholder="Enter custom banking message to synthesize..."></textarea>
-                <button id="btn-trigger-speech" class="btn btn-primary margin-top">SYNTHESIZE SPEECH</button>
+                <label for="tts-manual-input">Synthesize Custom Vocals</label>
+                <textarea id="tts-manual-input" rows="3" placeholder="Enter custom banking statement to generate audio..."></textarea>
+                <button id="btn-trigger-speech" class="btn btn-primary font-orbitron margin-top">SYNTHESIZE SPEECH</button>
               </div>
             </div>
 
             <!-- Quick Broadcast Stations -->
             <div class="glass-card voice-broadcast-card">
-              <h3>Preset Banking Prompts</h3>
-              <p class="desc">Select any preset scenario below to fire text-to-speech translations instantly.</p>
+              <h3 class="text-national-gradient">Precompiled Security Broadcasts</h3>
+              <p class="desc">Trigger standard verified statements translated automatically into the active locale.</p>
               <div class="broadcast-presets">
                 <button class="preset-speech-btn" data-en="Welcome to the Non-Human Banking System. Biometric entry verified." data-ta="மனிதரற்ற வங்கி முறைமைக்கு வருக வரவேற்கிறோம். உயிரியளவுகள் சரிபார்க்கப்பட்டது." data-hi="नॉन-ह्यूमन बैंकिंग सिस्टम में आपका स्वागत है। बायोमेट्रिक प्रवेश सत्यापित हो गया है।">
                   Welcome Greeting
@@ -496,107 +622,111 @@
           </div>
         </section>
 
-        <!-- VIEW 6: AI Help Desk Manager & Intent Classifier -->
+        <!-- VIEW 6: AI Help Desk & Intent Router Chatbot -->
         <section id="view-chatbot" class="tab-panel">
           <div class="section-header">
-            <h2>AI Help Desk Manager & Intent Classifier</h2>
-            <span class="badge badge-purple">INTENT CLASSIFIER MATRIX</span>
+            <div>
+              <h2 class="text-national-gradient">AI Help Desk & Intent Router</h2>
+              <p class="section-desc">Classify natural requests into system actions and route terminal displays automatically.</p>
+            </div>
+            <span class="badge badge-purple">NEURAL CLASSIFIER ONLINE</span>
           </div>
 
           <div class="chatbot-container glass-card">
             <div class="chatbot-header">
               <div class="bot-info">
-                <div class="bot-avatar">🤖</div>
+                <div class="bot-avatar">🇮🇳</div>
                 <div>
-                  <h4>NHBS Autonomous Router</h4>
-                  <span class="bot-status-tag">INTELLIGENT INTEGRATION</span>
+                  <h4>NHBS Command Router</h4>
+                  <span class="bot-status-tag font-mono">INTENT CLASSIFIER MATRIX</span>
                 </div>
               </div>
-              <div id="classifier-feedback" class="intent-indicator">Awaiting Query...</div>
+              <div id="classifier-feedback" class="intent-indicator font-mono">Awaiting Query...</div>
             </div>
 
             <!-- Chat Output -->
             <div class="chat-history" id="chat-messages">
               <div class="chat-message bot-msg">
-                <p>Greetings, I am the NHBS Autonomous Routing Agent. Type your banking requests, and I will analyze the intent patterns to automatically transition your console to the correct operational system.</p>
-                <span class="message-time">System Default</span>
+                <p>Greetings, I am the NHBS Autonomous Routing Agent. Type your banking requests (e.g. "file tax", "open vault", "invest 50000", "loan", "open gate"), and I will analyze the intent patterns to automatically transition your console to the correct operational system.</p>
+                <span class="message-time font-mono">System Standby</span>
               </div>
             </div>
 
             <!-- Quick Suggestions -->
             <div class="chatbot-suggestions">
-              <button class="suggest-chip" data-query="I want to file tax returns">File Tax Return</button>
-              <button class="suggest-chip" data-query="I want to open my locker">Open Locker Vault</button>
-              <button class="suggest-chip" data-query="Open the entry doors">Open Entry Door</button>
-              <button class="suggest-chip" data-query="Give me investment advice">AI Wealth Portfolio</button>
-              <button class="suggest-chip" data-query="Show me the audit logs">Security Logs</button>
+              <button class="suggest-chip font-sans" data-query="I want to file my tax returns">File Tax Return</button>
+              <button class="suggest-chip font-sans" data-query="I want to open my locker">Open Locker Vault</button>
+              <button class="suggest-chip font-sans" data-query="Open the entry doors">Open Entry Door</button>
+              <button class="suggest-chip font-sans" data-query="Give me investment advice">AI Wealth Portfolio</button>
+              <button class="suggest-chip font-sans" data-query="Show me the audit logs">Show Audit Ledger</button>
+              <button class="suggest-chip font-sans" data-query="Apply for a property loan">Property Loan</button>
             </div>
 
             <!-- Chat Input -->
             <form id="chatbot-form" class="chat-input-area" onsubmit="return false;">
               <input type="text" id="chat-input" placeholder="Type your banking prompt (e.g. 'I want to invest ₹50,000' or 'Open vault')" required autocomplete="off">
-              <div class="chat-input-actions" style="display: flex; gap: 10px; width: 100%; margin-top: 10px;">
-                <button type="submit" id="btn-submit-chat" class="btn btn-purple" style="flex: 1;">CLASSIFY INTENT & ROUTE</button>
-                <button type="button" id="btn-speak-chat" class="btn btn-sm btn-outline btn-voice" style="padding: 10px 16px;">🔊 Speak Response</button>
+              <div class="chat-input-actions">
+                <button type="submit" id="btn-submit-chat" class="btn btn-purple font-orbitron">CLASSIFY INTENT & ROUTE</button>
+                <button type="button" id="btn-speak-chat" class="btn btn-sm btn-outline btn-voice">🔊 Speak Response</button>
               </div>
             </form>
           </div>
         </section>
 
-        <!-- VIEW 7: AI Tax Management & Ledger Stream -->
+        <!-- VIEW 7: AI Tax Management & ITR Ledger -->
         <section id="view-taxation" class="tab-panel">
           <div class="section-header">
-            <h2>AI Tax Management & Ledger Stream</h2>
-            <span class="badge badge-yellow" id="badge-tax-view-mode">ANNUAL MANUAL FILING ACTIVE</span>
+            <div>
+              <h2 class="text-national-gradient">AI Tax Management & ITR Ledger</h2>
+              <p class="section-desc">Verify annual transactional inflows and submit filings under Option A frameworks.</p>
+            </div>
+            <span class="badge badge-yellow" id="badge-tax-view-mode">OPTION A (MANUAL FILING)</span>
           </div>
 
           <div class="taxation-layout-grid-single">
             <!-- Ledger and Return Filing -->
             <div class="glass-card taxation-card">
               <div class="card-header-with-btn">
-                <h3 class="glow-text">View 7: Annual Income Ledger & Tax Return filing</h3>
+                <h3 class="glow-text text-national-gradient">Annual Income Tax Return Ledger</h3>
                 <button id="btn-speak-tax-status" class="btn btn-sm btn-outline btn-voice">🔊 Listen to Ledger</button>
               </div>
-              <p class="desc">Review annual income metrics and deductions. Instantly submit forms under Option A rules.</p>
+              <p class="desc font-sans">Submit annual reports and calculate tax liabilities instantly with 1-click filing.</p>
               
-              <div class="income-ledger-grid">
+              <div class="income-ledger-grid font-mono">
                 <div class="ledger-row">
-                  <span>Gross Salary Income</span>
-                  <strong class="text-green">₹15,00,000.00</strong>
+                  <span>Gross Transactional Inflow</span>
+                  <strong class="text-green">₹8,50,000.00</strong>
                 </div>
                 <div class="ledger-row">
-                  <span>Capital Gain Dividends</span>
-                  <strong class="text-green">₹2,50,000.00</strong>
-                </div>
-                <div class="ledger-row">
-                  <span>Eligible 80C Deductions (PPF/ELSS)</span>
+                  <span>Standard Deductions (Sec 80C/80D)</span>
                   <strong class="text-yellow">-₹1,50,000.00</strong>
                 </div>
                 <div class="ledger-row">
-                  <span>Eligible 80D Deductions (Health Insurance)</span>
-                  <strong class="text-yellow">-₹50,000.00</strong>
+                  <span>Taxable Income Base</span>
+                  <strong class="text-green">₹7,00,000.00</strong>
                 </div>
                 <hr class="divider">
                 <div class="ledger-row net-row">
-                  <span>Net Payable Annual Tax</span>
-                  <strong id="ledger-net-tax" class="text-red">₹3,22,500.00</strong>
+                  <span>Calculated Net Tax Due</span>
+                  <strong id="ledger-net-tax" class="text-red">₹32,500.00</strong>
                 </div>
               </div>
 
               <div class="tax-action-panel">
-                <button id="btn-file-tax-return" class="btn btn-primary btn-full-width">SUBMIT ITR RETURN (1-CLICK)</button>
+                <button id="btn-file-tax-return" class="btn btn-primary btn-full-width font-orbitron">FILE ITR RETURNS (1-CLICK)</button>
               </div>
 
               <div id="itr-receipt-container" class="itr-receipt hidden">
                 <div class="receipt-header">
-                  <h4>INCOME TAX DEPARTMENT OF INDIA RECEIPT</h4>
-                  <span class="receipt-id" id="receipt-id">#ITR-2026-XXXX</span>
+                  <h4>INCOME TAX DEPARTMENT OF INDIA</h4>
+                  <span class="receipt-id font-mono" id="receipt-id">#ITR-2026-98124</span>
                 </div>
-                <div class="receipt-details">
-                  <div class="receipt-row"><span>Status:</span> <strong class="text-green">FILED & VERIFIED</strong></div>
+                <div class="receipt-details font-mono">
+                  <div class="receipt-row"><span>Status:</span> <strong class="text-green">FILING COMPLETED</strong></div>
                   <div class="receipt-row"><span>Authorized PAN:</span> <strong id="receipt-pan">ABCDE1234F</strong></div>
-                  <div class="receipt-row"><span>Net Tax Settled:</span> <strong id="receipt-amount">₹3,22,500.00</strong></div>
-                  <div class="receipt-row"><span>Signature Token:</span> <code id="receipt-token">Aadhaar_Auth_Token_Verified</code></div>
+                  <div class="receipt-row"><span>Net Tax Settled:</span> <strong id="receipt-amount">₹32,500.00</strong></div>
+                  <div class="receipt-row"><span>eKYC Signature Hash:</span> <code id="receipt-token">[Aadhaar_eKYC_Token_Verified]</code></div>
+                  <div class="receipt-row"><span>Filing Protocol:</span> <strong>RBI-DBU-ITR-v2</strong></div>
                 </div>
               </div>
             </div>
@@ -606,56 +736,59 @@
         <!-- VIEW 8: Spending-Based Automated Micro-Tax Rule Engine -->
         <section id="view-microtax" class="tab-panel">
           <div class="section-header">
-            <h2>Spending-Based Automated Micro-Tax Engine</h2>
-            <span class="badge badge-yellow" id="badge-microtax-view-mode">AUTOMATED ENGINE IDLE</span>
+            <div>
+              <h2 class="text-national-gradient">Spending-Based Automated Micro-Tax Engine</h2>
+              <p class="section-desc">Continuous background deductions applied dynamically based on active GST slabs.</p>
+            </div>
+            <span class="badge badge-yellow" id="badge-microtax-view-mode">OPTION B DEBIT SCHEMES</span>
           </div>
 
           <div class="taxation-layout-grid-single">
             <div class="glass-card taxation-card">
               <div class="card-header-with-btn">
-                <h3 class="glow-text">View 8: Spending Simulator & Micro-Tax Engine</h3>
-                <button id="btn-speak-microtax-status" class="btn btn-sm btn-outline btn-voice">🔊 Listen to Rule Set</button>
+                <h3 class="glow-text text-national-gradient">Spend Simulator & Micro-Tax Ledger</h3>
+                <button id="btn-speak-microtax-status" class="btn btn-sm btn-outline btn-voice">🔊 Listen to Rule Matrix</button>
               </div>
-              <p class="desc">Generate banking transactions. The engine computes GST rules and debits micro-tax automatically if Option B is active.</p>
+              <p class="desc font-sans">Simulate transaction outflows to verify automated GST deductions and live account debits.</p>
 
-              <div class="spending-simulation-triggers">
-                <button class="spend-btn btn-luxury" data-category="Luxury" data-amount="5000" data-item="Premium Airport Lounge Dine">
-                  Simulate Luxury Spend (₹5,000)<br><small>28% GST rule</small>
+              <div class="spending-simulation-triggers font-sans">
+                <button class="spend-btn btn-luxury" data-category="Luxury" data-amount="15000" data-item="Premium Electronics Terminal">
+                  Electronics Spend (₹15,000)<br><small>28% GST rule</small>
                 </button>
-                <button class="spend-btn btn-service" data-category="Service" data-amount="12000" data-item="Co-working Cloud Subscription">
-                  Simulate Service Spend (₹12,000)<br><small>18% GST rule</small>
+                <button class="spend-btn btn-service" data-category="Service" data-amount="3000" data-item="Premium Dine-In Experience">
+                  Dining Out Spend (₹3,000)<br><small>18% GST rule</small>
                 </button>
-                <button class="spend-btn btn-standard" data-category="Standard" data-amount="3500" data-item="Smart Holographic Terminal">
-                  Simulate Standard Spend (₹3,500)<br><small>12% GST rule</small>
+                <button class="spend-btn btn-standard" data-category="Standard" data-amount="5000" data-item="Office Utility Spend">
+                  Utility Spend (₹5,000)<br><small>12% GST rule</small>
                 </button>
-                <button class="spend-btn btn-essential" data-category="Essential" data-amount="1200" data-item="Bio-Sensor Medical Kit">
-                  Simulate Essential Spend (₹1,200)<br><small>5% GST rule</small>
+                <button class="spend-btn btn-essential" data-category="Essential" data-amount="2000" data-item="Essential Groceries Basket">
+                  Grocery Spend (₹2,000)<br><small>5% GST rule</small>
                 </button>
-                <button class="spend-btn btn-precious" data-category="Precious" data-amount="50000" data-item="24K Gold Sovereign Coin">
-                  Simulate Precious Spend (₹50,000)<br><small>3% GST rule</small>
+                <button class="spend-btn btn-precious" data-category="Precious" data-amount="50000" data-item="Sovereign 24K Gold Coin">
+                  Gold Sovereign Spend (₹50,000)<br><small>3% GST rule</small>
                 </button>
-                <button class="spend-btn btn-exempt" data-category="Exempt" data-amount="450" data-item="Organic Nutrient Capsule">
-                  Simulate Exempt Spend (₹450)<br><small>0% GST rule</small>
+                <button class="spend-btn btn-exempt" data-category="Exempt" data-amount="800" data-item="Essential Bio-Vaccines">
+                  Medical Capsule Spend (₹800)<br><small>0% GST rule</small>
                 </button>
               </div>
 
-              <div class="rule-matrix-display">
-                <h4>Active Micro-Tax Rule Set</h4>
+              <div class="rule-matrix-display font-sans">
+                <h4>Active GST Slabs & Rules</h4>
                 <ul class="rule-list">
-                  <li><span class="category-indicator luxury"></span> Luxury Goods & Services -> <strong>28% GST</strong></li>
-                  <li><span class="category-indicator service"></span> Services -> <strong>18% GST</strong></li>
-                  <li><span class="category-indicator standard"></span> Standard Goods -> <strong>12% GST</strong></li>
-                  <li><span class="category-indicator essential"></span> Essential Medicines / Commodities -> <strong>5% GST</strong></li>
+                  <li><span class="category-indicator luxury"></span> Luxury Goods & Electronics -> <strong>28% GST</strong></li>
+                  <li><span class="category-indicator service"></span> Services & Dining -> <strong>18% GST</strong></li>
+                  <li><span class="category-indicator standard"></span> Standard Utilities -> <strong>12% GST</strong></li>
+                  <li><span class="category-indicator essential"></span> Groceries & Essentials -> <strong>5% GST</strong></li>
                   <li><span class="category-indicator precious"></span> Precious Items & Gold -> <strong>3% GST</strong></li>
-                  <li><span class="category-indicator exempt"></span> Exempted Goods -> <strong>0% GST</strong></li>
+                  <li><span class="category-indicator exempt"></span> Exempted Medical Kits -> <strong>0% GST</strong></li>
                 </ul>
               </div>
 
               <!-- Live Simulation Ledgers -->
               <div class="simulation-ledger-box">
-                <h4>Micro-Tax Transaction Ledger</h4>
-                <div id="sim-transaction-ledger" class="sim-ledger-list">
-                  <div class="sim-empty-state">No simulated transactions generated yet. Click buttons above.</div>
+                <h4 class="text-national-gradient font-orbitron">Real-time Micro-Tax ledger</h4>
+                <div id="sim-transaction-ledger" class="sim-ledger-list font-mono">
+                  <div class="sim-empty-state">No simulated transactions recorded. Click buttons above.</div>
                 </div>
               </div>
             </div>
@@ -665,33 +798,36 @@
         <!-- VIEW 9: AI Wealth & Financial Portfolio Advisor -->
         <section id="view-wealth" class="tab-panel">
           <div class="section-header">
-            <h2>AI Wealth & Financial Portfolio Advisor</h2>
-            <span class="badge badge-blue">PORTFOLIO HEURISTIC ALGORITHMS</span>
+            <div>
+              <h2 class="text-national-gradient">AI Wealth & Portfolio Advisor</h2>
+              <p class="section-desc">Generate optimized, risk-hedged allocations based on monthly capital parameters.</p>
+            </div>
+            <span class="badge badge-blue">HEURISTIC PORTFOLIO DESIGN</span>
           </div>
 
           <div class="wealth-planner-grid">
             <!-- Planner Inputs -->
             <div class="glass-card wealth-input-card">
-              <h3>Monthly Investment Profile</h3>
-              <p class="desc">Enter your monthly savings capacity. The AI engine constructs a risk-hedged split and synthesizes audio portfolio analysis.</p>
+              <h3 class="text-national-gradient">Savings Allocator</h3>
+              <p class="desc">Enter your monthly savings capacity to structure an optimized 3-tier risk-hedged allocation model.</p>
 
               <div class="form-group margin-bottom-lg">
                 <label for="savings-input">Monthly Savings Capacity (₹)</label>
                 <input type="number" id="savings-input" value="30000" min="1000" step="1000" placeholder="e.g. 30000">
               </div>
 
-              <button id="btn-generate-portfolio" class="btn btn-blue btn-full-width">GENERATE & OPTIMIZE PORTFOLIO</button>
+              <button id="btn-generate-portfolio" class="btn btn-blue btn-full-width font-orbitron">GENERATE DIVERSIFICATION SPLIT</button>
             </div>
 
             <!-- Planner Visual Output -->
             <div class="glass-card wealth-output-card">
-              <h3 class="glow-text">3-Tier Risk-Hedged Allocation</h3>
-              <div class="portfolio-chart-container">
+              <h3 class="glow-text text-national-gradient">3-Tier Sovereign Split Model</h3>
+              <div class="portfolio-chart-container font-sans">
                 <!-- Bar 1: Low Risk (40%) -->
                 <div class="portfolio-bar-item">
                   <div class="bar-header">
                     <span class="bar-name">Fixed Deposits (Low Risk - 40%)</span>
-                    <strong id="portfolio-fd-val" class="bar-val">₹12,000</strong>
+                    <strong id="portfolio-fd-val" class="bar-val font-mono">₹12,000</strong>
                   </div>
                   <div class="bar-track">
                     <div id="portfolio-fd-fill" class="bar-fill fd-bg" style="width: 40%;"></div>
@@ -703,19 +839,19 @@
                 <div class="portfolio-bar-item">
                   <div class="bar-header">
                     <span class="bar-name">Sovereign Gold Bonds (Moderate Risk - 30%)</span>
-                    <strong id="portfolio-sgb-val" class="bar-val">₹9,000</strong>
+                    <strong id="portfolio-sgb-val" class="bar-val font-mono">₹9,000</strong>
                   </div>
                   <div class="bar-track">
                     <div id="portfolio-sgb-fill" class="bar-fill sgb-bg" style="width: 30%;"></div>
                   </div>
-                  <span class="bar-desc">Inflation hedge backed by sovereign backing.</span>
+                  <span class="bar-desc">Inflation hedge backed by sovereign reserves.</span>
                 </div>
 
                 <!-- Bar 3: High Growth (30%) -->
                 <div class="portfolio-bar-item">
                   <div class="bar-header">
                     <span class="bar-name">Index Mutual Funds (High Growth - 30%)</span>
-                    <strong id="portfolio-index-val" class="bar-val">₹9,000</strong>
+                    <strong id="portfolio-index-val" class="bar-val font-mono">₹9,000</strong>
                   </div>
                   <div class="bar-track">
                     <div id="portfolio-index-fill" class="bar-fill mutual-bg" style="width: 30%;"></div>
@@ -725,32 +861,34 @@
               </div>
 
               <div class="portfolio-voice-panel">
-                <button id="btn-portfolio-voice-read" class="btn btn-green">
-                  <svg class="btn-icon-svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                  LISTEN TO PORTFOLIO BREAKDOWN
+                <button id="btn-portfolio-voice-read" class="btn btn-green font-orbitron">
+                  🔊 LISTEN TO PORTFOLIO BREAKDOWN
                 </button>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- VIEW 10: NEW! AI Geotagged Property Loan System (50% LTV Cap) -->
+        <!-- VIEW 10: AI Geotagged Property Loan System (50% LTV Cap) -->
         <section id="view-loan" class="tab-panel">
           <div class="section-header">
-            <h2>AI Geotagged Property Loan System (50% LTV Limit)</h2>
-            <span class="badge badge-cyan" id="badge-loan-hdr">COMPLIANCE SCANNER ACTIVE</span>
+            <div>
+              <h2 class="text-national-gradient">Geotagged Property Loan System</h2>
+              <p class="section-desc">Asset-backed credit lines verified via Sat-Core survey coordinate metadata.</p>
+            </div>
+            <span class="badge badge-cyan" id="badge-loan-hdr">50% LTV CAPPING APPLIED</span>
           </div>
 
           <div class="loan-grid">
             <!-- Left Column: Site Document & Photo Scanning -->
             <div class="glass-card loan-card">
-              <h3 class="glow-text">Digital Document & Site Verification</h3>
-              <p class="desc">Upload property deed and geotagged site photograph to extract coordinates and parse EXIF metadata.</p>
+              <h3 class="text-national-gradient">Survey Documents & Coordinates</h3>
+              <p class="desc">Upload property deed and survey photos to parse site coordinates and check boundaries.</p>
               
               <div class="document-scan-zone">
                 <div class="upload-slot" id="deed-upload-slot">
                   <svg class="upload-icon" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
-                  <span class="upload-label" id="deed-label">Drag & Drop Property Deed (.PDF/.DOCX)</span>
+                  <span class="upload-label" id="deed-label">Property Title Deed (.PDF)</span>
                   <div class="slot-actions">
                     <button class="btn btn-sm btn-outline" id="btn-load-sample-deed">Load Sample Deed</button>
                   </div>
@@ -758,23 +896,25 @@
                 
                 <div class="upload-slot" id="photo-upload-slot">
                   <svg class="upload-icon" viewBox="0 0 24 24"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
-                  <span class="upload-label" id="photo-label">Drag & Drop Geotagged Photo (.JPG/.PNG)</span>
+                  <span class="upload-label" id="photo-label">Geotagged Survey Photo (.JPG)</span>
                   <div class="slot-actions">
                     <button class="btn btn-sm btn-outline" id="btn-load-sample-photo">Load Sample Photo</button>
                   </div>
                 </div>
               </div>
               
+              <!-- Scanning animation widget -->
               <div class="exif-scanner-box hidden" id="exif-scanner-container">
                 <div class="scanner-hologram">
                   <div class="scanner-laser"></div>
-                  <span class="scanner-text">PARSING SITE EXIF METADATA...</span>
+                  <span class="scanner-text font-orbitron">PARSING SITE EXIF GEOTAGS...</span>
                 </div>
               </div>
 
+              <!-- Extracted EXIF data panel -->
               <div class="exif-data-display glass-card hidden" id="exif-data-panel">
-                <h4>Extracted EXIF Metadata</h4>
-                <div class="exif-metrics">
+                <h4 class="text-national-gradient">Verified EXIF GPS Metadata</h4>
+                <div class="exif-metrics font-mono">
                   <div class="exif-row">
                     <span>GPS Latitude:</span>
                     <strong id="exif-lat" class="text-cyan">11.3410° N</strong>
@@ -784,16 +924,16 @@
                     <strong id="exif-lng" class="text-cyan">77.7172° E</strong>
                   </div>
                   <div class="exif-row">
-                    <span>Boundary Accuracy:</span>
-                    <strong id="exif-accuracy" class="text-green">±3.2 meters (Verified)</strong>
+                    <span>Survey Accuracy:</span>
+                    <strong id="exif-accuracy" class="text-green">99.8% GPS Sync Accuracy</strong>
                   </div>
                   <div class="exif-row">
-                    <span>Geotag Verification:</span>
-                    <strong class="text-green">[Verified via Sat-Core]</strong>
+                    <span>Verification Time:</span>
+                    <strong id="exif-time">2026-08-05 00:36:10</strong>
                   </div>
                   <div class="exif-row">
-                    <span>GPS Capture Time:</span>
-                    <strong id="exif-time" class="font-mono">2026-07-28 23:25:24</strong>
+                    <span>DPDP Act Compliance:</span>
+                    <strong class="text-green">[Geo-Data Encrypted]</strong>
                   </div>
                 </div>
               </div>
@@ -801,50 +941,50 @@
 
             <!-- Right Column: Calculator & Valuation -->
             <div class="glass-card loan-card">
-              <h3 class="glow-text">AI Property Valuation & Strict 50% LTV Calculator</h3>
-              <p class="desc">Enter area parameters and guideline values to compute maximum loan eligibility. Compliance rules enforce a 50% Loan-to-Value limit.</p>
+              <h3 class="text-national-gradient">50% LTV Loan Calculator</h3>
+              <p class="desc">Compute loan eligibility based on properties dimensions. Maximum loan is strictly capped at fifty percent.</p>
               
-              <div class="valuation-inputs">
+              <div class="valuation-inputs font-sans">
                 <div class="form-row">
                   <div class="form-group">
                     <label for="loan-area">Property Area (sq. ft)</label>
                     <input type="number" id="loan-area" value="2500" min="100" step="50">
                   </div>
                   <div class="form-group">
-                    <label for="loan-rate">Guideline Value (₹ / sq. ft)</label>
-                    <input type="number" id="loan-rate" value="1600" min="100" step="50">
+                    <label for="loan-rate">Guideline Rate (₹ / sq. ft)</label>
+                    <input type="number" id="loan-rate" value="4200" min="100" step="50">
                   </div>
                 </div>
 
-                <div class="valuation-metrics">
+                <div class="valuation-metrics font-mono">
                   <div class="val-row">
                     <span>Total Property Valuation:</span>
-                    <strong id="loan-val-total" class="text-green">₹40,00,000.00</strong>
+                    <strong id="loan-val-total" class="text-green">₹1,05,00,000.00</strong>
                   </div>
                   <div class="val-row text-accent-cyan">
-                    <span>Max Disbursable Loan (50% LTV Cap):</span>
-                    <strong id="loan-val-max" class="text-cyan">₹20,00,000.00</strong>
+                    <span>Maximum Credit Allowed (50% LTV):</span>
+                    <strong id="loan-val-max" class="text-cyan">₹52,50,000.00</strong>
                   </div>
                 </div>
 
                 <div class="form-group margin-top">
                   <div class="label-with-badge">
-                    <label for="loan-requested">Requested Loan Amount (₹)</label>
+                    <label for="loan-requested">Requested Credit Value (₹)</label>
                     <span id="badge-ltv-cap" class="badge badge-accent hidden">[50% LTV Cap Enforced]</span>
                   </div>
-                  <input type="number" id="loan-requested" value="1500000" min="10000" step="5000">
-                  <input type="range" id="loan-requested-range" min="10000" max="2000000" value="1500000" step="5000" class="cyber-slider">
+                  <input type="number" id="loan-requested" value="2000000" min="10000" step="10000">
+                  <input type="range" id="loan-requested-range" min="10000" max="5250000" value="2000000" step="10000" class="cyber-slider">
                 </div>
 
                 <div class="compliance-alert-box">
                   <span class="warning-icon">⚠️</span>
-                  <p>Government & Banking Compliance Caps Loan-to-Value (LTV) at a maximum of 50% of verified property valuation.</p>
+                  <p class="font-sans">Government Compliance: Loans against property are strictly limited to 50% LTV. Sanction requires verified geotags.</p>
                 </div>
 
                 <div class="form-row margin-top">
                   <div class="form-group">
-                    <label for="loan-tenure">Tenure (Years): <span id="label-loan-tenure" class="text-cyan">10 Years</span></label>
-                    <input type="range" id="loan-tenure" min="1" max="15" value="10" step="1" class="cyber-slider">
+                    <label for="loan-tenure">Tenure: <span id="label-loan-tenure" class="text-cyan">10 Years</span></label>
+                    <input type="range" id="loan-tenure" min="1" max="15" value="10" stroke-width="2" class="cyber-slider">
                   </div>
                   <div class="form-group">
                     <label>Interest Rate (Fixed)</label>
@@ -853,56 +993,56 @@
                 </div>
 
                 <div class="emi-output-card">
-                  <span class="emi-label">ESTIMATED MONTHLY EMI</span>
-                  <span id="loan-emi-value" class="emi-value text-cyan">₹18,582.00</span>
+                  <span class="emi-label font-orbitron">ESTIMATED MONTHLY INSTALLMENT (EMI)</span>
+                  <span id="loan-emi-value" class="emi-value text-cyan font-mono">₹24,797.00</span>
                 </div>
 
-                <button id="btn-generate-sanction" class="btn btn-cyan btn-full-width margin-top" disabled>GENERATE DIGITAL SANCTION LETTER</button>
+                <button id="btn-generate-sanction" class="btn btn-cyan btn-full-width margin-top font-orbitron" disabled>GENERATE DIGITAL SANCTION LETTER</button>
               </div>
             </div>
           </div>
 
-          <!-- Sanction Letter Preview Box (revealed after click) -->
+          <!-- Sanction Letter Preview Box -->
           <div id="sanction-letter-container" class="sanction-letter-wrapper glass-card margin-top hidden">
             <div class="sanction-inner">
-              <div class="sanction-seal">
+              <div class="sanction-seal font-orbitron">
                 <div class="seal-inner">NHBS VALID</div>
               </div>
               <div class="sanction-header">
-                <h4 class="glow-text">DIGITAL LOAN SANCTION MEMORANDUM</h4>
-                <span class="sanction-ref" id="sanction-ref-no">REF: NHBS-PL-8942-A</span>
+                <h4 class="glow-text text-national-gradient">DIGITAL LOAN SANCTION MEMORANDUM</h4>
+                <span class="sanction-ref font-mono" id="sanction-ref-no">REF: #LAP-2026-88421</span>
               </div>
               
-              <div class="sanction-body">
+              <div class="sanction-body font-sans">
                 <div class="sanction-grid">
                   <div>
-                    <span class="s-label">BORROWER IDENTIFICATION</span>
-                    <strong class="s-val" id="sanction-name">-</strong>
-                    <span class="s-label">CREDENTIAL AUTH TOKEN</span>
-                    <code class="s-val-code" id="sanction-token">[Aadhaar_Auth_Token_Verified]</code>
+                    <span class="s-label">BORROWER NAME</span>
+                    <strong class="s-val" id="sanction-name">Karthikeya Manikandan S</strong>
+                    <span class="s-label">eKYC TOKEN HASH</span>
+                    <code class="s-val-code font-mono" id="sanction-token">[Aadhaar_eKYC_Token_Verified]</code>
                   </div>
                   <div>
-                    <span class="s-label">GEOTAGGED SITE COORDINATES</span>
-                    <strong class="s-val" id="sanction-coords">-</strong>
-                    <span class="s-label">GPS SYNC ACCURACY</span>
-                    <strong class="s-val text-green" id="sanction-gps-accuracy">-</strong>
+                    <span class="s-label">VERIFIED COORDINATES</span>
+                    <strong class="s-val font-mono" id="sanction-coords">Lat: 11.3410° N, Long: 77.7172° E</strong>
+                    <span class="s-label">SATELLITE SYNC ACCURACY</span>
+                    <strong class="s-val text-green font-mono" id="sanction-gps-accuracy">99.8%</strong>
                   </div>
                   <div>
-                    <span class="s-label">VERIFIED SITE PROPERTY VALUE</span>
-                    <strong class="s-val text-green" id="sanction-prop-val">-</strong>
-                    <span class="s-label">SANCTIONED LOAN PRINCIPAL</span>
-                    <strong class="s-val text-cyan" id="sanction-loan-amount">-</strong>
+                    <span class="s-label">VERIFIED VALUATION</span>
+                    <strong class="s-val text-green font-mono" id="sanction-prop-val">₹1,05,00,000.00</strong>
+                    <span class="s-label">SANCTIONED PRINCIPAL</span>
+                    <strong class="s-val text-cyan font-mono" id="sanction-loan-amount">₹20,00,000.00</strong>
                   </div>
                   <div>
                     <span class="s-label">COMPLIANCE RATIO (LTV)</span>
-                    <strong class="s-val text-green" id="sanction-ltv-ratio">50.00%</strong>
-                    <span class="s-label">MONTHLY AMORTIZED INSTALLMENT (EMI)</span>
-                    <strong class="s-val text-cyan" id="sanction-emi">-</strong>
+                    <strong class="s-val text-green font-mono" id="sanction-ltv-ratio">19.05%</strong>
+                    <span class="s-label">ESTIMATED EMI</span>
+                    <strong class="s-val text-cyan font-mono" id="sanction-emi">₹24,797.00 / Month</strong>
                   </div>
                 </div>
                 
                 <div class="sanction-disclaimer">
-                  This document is cryptographically verified using synthetic Aadhaar identity token validation protocols. Funding is pre-allocated in local branch escrow vaults and is ready for immediate phygital disbursement.
+                  This document is digitally validated under RBI Digital Banking guidelines. Funds are pre-allocated in Coimbatore main vault and are available for immediate escrow deployment.
                 </div>
               </div>
               
@@ -910,11 +1050,10 @@
                 <div class="signer">
                   <span class="signature-line"></span>
                   <span>NHBS SECURE VAULT ENGINE</span>
-                  <small>Autonomous Disbursers</small>
+                  <small>Coimbatore Main DBU Branch</small>
                 </div>
-                <button id="btn-sanction-speak" class="btn btn-green">
-                  <svg class="btn-icon-svg" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/></svg>
-                  LISTEN TO SANCTION DETAILS
+                <button id="btn-sanction-speak" class="btn btn-green font-orbitron">
+                  🔊 LISTEN TO SANCTION MEMO
                 </button>
               </div>
             </div>
@@ -924,43 +1063,45 @@
         <!-- VIEW 11: Aadhaar Biometric Vault Locker -->
         <section id="view-vault" class="tab-panel">
           <div class="section-header">
-            <h2>Aadhaar Biometric Vault Locker</h2>
-            <span class="badge badge-red" id="vault-top-badge">SECURED LOCKOUT ACTIVE</span>
+            <div>
+              <h2 class="text-national-gradient">Aadhaar Biometric Vault Locker</h2>
+              <p class="section-desc">Secure safety locker deposit box. Protected by dual PIN inputs and biometric scanning.</p>
+            </div>
+            <span class="badge badge-red" id="vault-top-badge">VAULT LOCKED</span>
           </div>
 
           <div class="vault-grid">
             <!-- Security Display -->
             <div class="glass-card vault-status-card flex-center flex-column">
-              <h3>Vault Locker Status</h3>
+              <h3 class="text-national-gradient">Locker Access Matrix</h3>
               <div id="vault-graphic" class="vault-graphic locked">
                 <!-- Locker SVG lock animation -->
                 <svg id="svg-vault-icon" viewBox="0 0 24 24" class="vault-svg">
-                  <!-- Closed Lock -->
                   <path id="svg-vault-shackle" d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10z" />
                   <path d="M12 13c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z" />
                 </svg>
-                <div id="vault-status-indicator-text" class="status-overlay-text text-red font-orbitron">SECURE LOCKS ACTIVE</div>
+                <div id="vault-status-indicator-text" class="status-overlay-text text-red font-orbitron">VAULT LOCKED 🔒</div>
               </div>
-              <div class="vault-details-table">
-                <div class="detail-row"><span>Operational Unit:</span> <strong>Locker #HF2026-SOC</strong></div>
-                <div class="detail-row"><span>Authentication:</span> <strong>2FA PIN + Aadhaar Bio Scan</strong></div>
-                <div class="detail-row"><span>Access Control:</span> <strong id="vault-access-level" class="text-red">UNAUTHORIZED</strong></div>
+              <div class="vault-details-table font-sans">
+                <div class="detail-row"><span>Unit ID:</span> <strong>Locker #HF-2026-COIMBATORE</strong></div>
+                <div class="detail-row"><span>Authorization:</span> <strong>2FA PIN + eKYC Token Scan</strong></div>
+                <div class="detail-row"><span>Boundary Status:</span> <strong id="vault-access-level" class="text-red font-mono">UNAUTHORIZED LOCK</strong></div>
               </div>
               <button id="btn-speak-vault" class="btn btn-sm btn-outline btn-voice" style="margin-top: 16px;">🔊 Speak Locker Status</button>
             </div>
 
             <!-- PIN Pad & Fingerprint Terminal -->
             <div class="glass-card vault-control-card">
-              <h3>Dual-Factor Access Terminal</h3>
-              <p class="desc">Enter 4-Digit Security PIN code followed by Biometric thumbprint scan verification.</p>
+              <h3 class="text-national-gradient">Dual-Factor Control Interface</h3>
+              <p class="desc">Enter 4-Digit Security Passcode (Default: 1234) followed by fingerprint validation.</p>
 
-              <!-- PIN code readout -->
+              <!-- PIN display -->
               <div class="pin-display">
-                <span class="pin-stars" id="pin-readout">----</span>
+                <span class="pin-stars font-mono" id="pin-readout">----</span>
               </div>
 
               <!-- PIN Pad Button Matrix -->
-              <div class="pin-grid">
+              <div class="pin-grid font-orbitron">
                 <button class="pin-btn" data-val="1">1</button>
                 <button class="pin-btn" data-val="2">2</button>
                 <button class="pin-btn" data-val="3">3</button>
@@ -984,36 +1125,39 @@
                   <div class="scanner-glow"></div>
                   <div class="scanner-ring"></div>
                 </button>
-                <span class="scanner-label" id="vault-scanner-label">Awaiting PIN Code Verification...</span>
+                <span class="scanner-label font-sans" id="vault-scanner-label">Awaiting PIN Code Verification...</span>
               </div>
             </div>
           </div>
         </section>
 
-        <!-- VIEW 11: System Audit Log & Transaction Summary -->
+        <!-- VIEW 12: National Audit Ledger & Digital Receipts -->
         <section id="view-audit" class="tab-panel">
           <div class="section-header">
-            <h2>System Audit Log & Transaction Summary</h2>
-            <span class="badge badge-accent">LOG STORE SECURE</span>
+            <div>
+              <h2 class="text-national-gradient">National DBU Audit Ledger</h2>
+              <p class="section-desc">DPDP Compliant secure logging node tracking system events and assets transactions.</p>
+            </div>
+            <span class="badge badge-accent">TLS 1.3 LEDGER LOCKED</span>
           </div>
 
           <div class="glass-card audit-terminal-card">
             <div class="terminal-header">
               <span class="terminal-indicator"></span>
-              <h4>NHBS CORE SECURITY LEDGER STREAM</h4>
-              <span class="terminal-net-status">TLS 1.3 SECURED</span>
+              <h4 class="text-national-gradient font-orbitron">NHBS CENTRAL SECURE TRANSACTIONS & EVENTS LEDGER</h4>
+              <span class="terminal-net-status font-mono">TLS 1.3 ENC</span>
             </div>
             
-            <div class="terminal-body" id="audit-log-body">
+            <div class="terminal-body font-mono" id="audit-log-body">
               <div class="terminal-row">
-                <span class="time">[2026-07-25 00:40:01]</span>
+                <span class="time">[2026-08-05 00:36:11]</span>
                 <span class="tag tag-system">[SYSTEM]</span>
-                <span class="msg">NHBS Core Banking Engine successfully booted. Event logs attached.</span>
+                <span class="msg">NHBS National Digital Banking Unit booted. Compliance models engaged.</span>
               </div>
               <div class="terminal-row">
-                <span class="time">[2026-07-25 00:40:02]</span>
+                <span class="time">[2026-08-05 00:36:12]</span>
                 <span class="tag tag-security">[SECURITY]</span>
-                <span class="msg">Physical Sliding Gate locking mechanism test initiated. Laser grid active.</span>
+                <span class="msg">Secure physical entry gate initialized. Hydraulics pressurized. Lasers active.</span>
               </div>
             </div>
           </div>

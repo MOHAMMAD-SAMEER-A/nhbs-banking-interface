@@ -1,6 +1,7 @@
 /**
  * NHBS - Non-Human Banking System
  * Core Application Logic & State Controller
+ * Digital Banking Unit (DBU) National Prototype
  */
 
 // ----------------------------------------------------
@@ -8,15 +9,15 @@
 // ----------------------------------------------------
 const state = {
   user: {
-    name: '',
-    account: '',
-    bank: '',
-    branch: '',
-    pan: '',
+    name: 'Karthikeya Manikandan S',
+    account: 'SB-IND-9874102938',
+    bank: 'State Bank Ecosystem',
+    branch: 'Coimbatore Main DBU',
+    pan: 'ABCDE1234F',
     taxFramework: 'A', // 'A' (Annual Return) or 'B' (Continuous Micro-Tax)
     verified: false,
     authToken: '',
-    balance: 100000.00,
+    balance: 248500.00, // Default initial balance
     taxPaid: 0.00
   },
   doorStatus: 'CLOSED', // 'CLOSED' or 'OPEN'
@@ -30,17 +31,18 @@ const state = {
     lang: 'en-US', // 'en-US', 'ta-IN', 'hi-IN'
     voices: [],
     muted: false,
+    active: false,
     lastChatResponse: 'Greetings, I am the NHBS Autonomous Routing Agent. Type your banking requests, and I will analyze the intent patterns to automatically transition your console to the correct operational system.'
   },
   loan: {
     deedUploaded: false,
     photoUploaded: false,
     coordinates: 'Lat: 11.3410° N, Long: 77.7172° E',
-    gpsTimestamp: '2026-07-28 23:25:24',
-    accuracy: '±3.2 meters (Verified)',
+    gpsTimestamp: '2026-08-05 00:36:10',
+    accuracy: '99.8% (Verified)',
     area: 2500,
-    rate: 1600,
-    requestedAmount: 1500000,
+    rate: 4200, // Default properties rates
+    requestedAmount: 2000000,
     tenure: 10,
     interestRate: 8.50,
     sanctioned: false
@@ -54,6 +56,13 @@ const LANG_NAMES = {
   'en-US': 'English',
   'ta-IN': 'Tamil (தமிழ்)',
   'hi-IN': 'Hindi (हिन्दी)'
+};
+
+// Localized confirmation messages for language change alerts
+const LANG_CONFIRMATIONS = {
+  'en-US': 'Assistant language configured to English.',
+  'ta-IN': 'உதவியாளர் மொழி தமிழுக்கு மாற்றப்பட்டது.',
+  'hi-IN': 'सहायक भाषा हिंदी पर सेट की गई है।'
 };
 
 // ----------------------------------------------------
@@ -80,8 +89,8 @@ const logEvent = (category, message) => {
 
   const body = document.getElementById('audit-log-body');
   if (body) {
-    // Clear initial empty text if present
-    if (state.auditLogs.length === 1 && body.innerHTML.includes('System Default')) {
+    // Clear initial placeholder if present
+    if (state.auditLogs.length === 1 && body.innerHTML.includes('System booted')) {
       body.innerHTML = '';
     }
 
@@ -107,13 +116,6 @@ const logEvent = (category, message) => {
 // ----------------------------------------------------
 // 3. MULTILINGUAL TEXT-TO-SPEECH (TTS) ENGINE
 // ----------------------------------------------------
-// Localized confirmation messages for language change alerts
-const LANG_CONFIRMATIONS = {
-  'en-US': 'Assistant language configured to English.',
-  'ta-IN': 'உதவியாளர் மொழி தமிழுக்கு மாற்றப்பட்டது.',
-  'hi-IN': 'सहायक भाषा हिंदी पर सेट की गई है।'
-};
-
 const initSpeechEngine = () => {
   const loadVoices = () => {
     state.speech.voices = window.speechSynthesis.getVoices();
@@ -129,45 +131,36 @@ const speakPrompt = (text, customLang = null) => {
   if (!window.speechSynthesis) return;
   if (state.speech.muted) return;
 
-  // Cancel any ongoing speech
+  // STRICT RULE: Speech Queue Flush before firing any new speech request
   window.speechSynthesis.cancel();
 
   // Determine language dynamically if not explicitly passed
-  let lang = customLang;
-  if (!lang) {
+  let lang = customLang || state.speech.lang;
+  if (!customLang) {
     if (/[\u0B80-\u0BFF]/.test(text)) {
       lang = 'ta-IN';
     } else if (/[\u0900-\u097F]/.test(text)) {
       lang = 'hi-IN';
-    } else {
-      // Fallback to English for Latin/English text to avoid TTS engine issues
-      // when trying to read English using Tamil/Hindi voice on mobile devices.
-      lang = 'en-US';
     }
   }
 
   const utterance = new SpeechSynthesisUtterance(text);
   utterance.lang = lang;
 
-  // Refresh voices on the fly (crucial for mobile where getVoices is populated asynchronously)
+  // Find a matching voice for the target locale
   const voices = window.speechSynthesis.getVoices();
   if (voices && voices.length > 0) {
     state.speech.voices = voices;
   }
 
   const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  const professionalVoices = state.speech.voices.filter(v => !/fred|bells|cellos|zarvox|whisper/i.test(v.name));
 
-  // Filter out novelty/robotic voices (e.g. Fred, Zarvox) to ensure a professional tone
-  const NOVELTY_VOICE_REGEXP = /fred|bells|cellos|hysterical|pipe|princess|zarvox|whisper|boing|good|bad|deranged|bubbles|moira|trinoids|organ/i;
-  const professionalVoices = state.speech.voices.filter(v => !NOVELTY_VOICE_REGEXP.test(v.name));
-
-  // Find a matching voice for the target locale
   const normalizedTarget = lang.toLowerCase().replace('_', '-');
   const targetPrefix = normalizedTarget.split('-')[0];
   
   let matchingVoice = null;
 
-  // If it's English, try to find a high-quality professional voice first
   if (targetPrefix === 'en') {
     const EnglishPriority = ["samantha", "google us english", "microsoft zira", "microsoft david", "siri", "daniel"];
     for (const priorityName of EnglishPriority) {
@@ -179,39 +172,18 @@ const speakPrompt = (text, customLang = null) => {
     }
   }
 
-  // If not found, look for exact language match in professional list
   if (!matchingVoice) {
-    matchingVoice = professionalVoices.find(v => {
-      const vLang = v.lang.toLowerCase().replace('_', '-');
-      return vLang === normalizedTarget;
-    });
+    matchingVoice = professionalVoices.find(v => v.lang.toLowerCase().replace('_', '-') === normalizedTarget);
+  }
+  if (!matchingVoice) {
+    matchingVoice = professionalVoices.find(v => v.lang.toLowerCase().replace('_', '-').startsWith(targetPrefix));
+  }
+  if (!matchingVoice) {
+    matchingVoice = state.speech.voices.find(v => v.lang.toLowerCase().replace('_', '-').startsWith(targetPrefix));
   }
 
-  // If still not found, look for prefix match in professional list
-  if (!matchingVoice) {
-    matchingVoice = professionalVoices.find(v => {
-      const vLang = v.lang.toLowerCase().replace('_', '-');
-      return vLang.startsWith(targetPrefix);
-    });
-  }
-
-  // If still not found, look for prefix match in the raw list (including novelty)
-  if (!matchingVoice) {
-    matchingVoice = state.speech.voices.find(v => {
-      const vLang = v.lang.toLowerCase().replace('_', '-');
-      return vLang.startsWith(targetPrefix);
-    });
-  }
-
-  // Mobile optimization:
-  // If we are on a mobile device and the selected voice is NOT local (meaning it is a cloud/network voice),
-  // do NOT set utterance.voice. Mobile browsers (especially Chrome/Samsung on Android) often fail silently
-  // or hang when trying to play non-local/cloud voices if they are not pre-downloaded. Leaving utterance.voice
-  // unset lets the mobile OS automatically select its default local high-quality voice for that language code.
-  if (matchingVoice) {
-    if (matchingVoice.localService || !isMobile) {
-      utterance.voice = matchingVoice;
-    }
+  if (matchingVoice && (matchingVoice.localService || !isMobile)) {
+    utterance.voice = matchingVoice;
   }
 
   // Animation triggers on waveform
@@ -235,7 +207,7 @@ const speakPrompt = (text, customLang = null) => {
   };
 
   utterance.onerror = (e) => {
-    console.error('SpeechSynthesisUtterance error:', e);
+    console.error('SpeechSynthesis error:', e);
     if (waveform) waveform.classList.remove('speaking');
     if (statusText) statusText.innerText = 'ASSISTANT IDLE';
     const stopBtn = document.getElementById('btn-floating-stop');
@@ -250,7 +222,7 @@ const speakPrompt = (text, customLang = null) => {
 // 4. VIEW ROUTER & NAVIGATION
 // ----------------------------------------------------
 const switchTab = (tabId) => {
-  // Cancel speech on view switch
+  // STRICT RULE: Instant Stop on Navigation (switching views)
   if ('speechSynthesis' in window) {
     window.speechSynthesis.cancel();
   }
@@ -278,27 +250,7 @@ const switchTab = (tabId) => {
     }
   });
 
-  logEvent('SYSTEM', `UI routed to panel: ${tabId.toUpperCase()}`);
-
-  // Speak tab explanation automatically
-  const tabExplanations = {
-    dashboard: "Welcome to your Central Smart Branch Dashboard. Here you can view your active customer credential matrix, live account metrics, and access the system's core modules.",
-    doors: "Entrance Gate Door Telemetry panel. You can monitor physical sliding door coordinates and laser sensor configurations, and toggle door state locks.",
-    voice: "Voice Hub configuration. Select speech synthesis languages and test audio confirmation outputs for dynamic banking prompts.",
-    chatbot: "AI Help Desk Console. Ask the non-human banking assistant to retrieve documents, toggle security settings, run portfolio optimizations, or file tax forms using natural language.",
-    taxation: "AI Tax Management and Spending Rule Engine. You can view your annual income ledger, file tax returns, simulate transaction spending, and configure active micro tax rules.",
-    microtax: "Spending-Based Automated Micro-Tax Engine. Here you can simulate transaction spending and view the automated micro tax transaction ledger.",
-    wealth: "AI Portfolio Advisor. Input your monthly savings capacity to generate a dynamic, risk-hedged asset allocation optimized by heuristic algorithms.",
-    loan: "AI Geotagged Property Loan System. Verify property photo coordinates and site EXIF data to apply for property loans under a strict fifty percent LTV cap.",
-    vault: "Aadhaar Biometric Locker. Secure access to your safe deposit locker vault using a two-factor passcode and fingerprint ring verification.",
-    audit: "Secure Audit Ledger. Review encrypted transaction logs and system telemetry records for immutable blockchain verification."
-  };
-
-  if (tabExplanations[tabId]) {
-    setTimeout(() => {
-      speakPrompt(tabExplanations[tabId]);
-    }, 200);
-  }
+  logEvent('SYSTEM', `Console routed to view: ${tabId.toUpperCase()}`);
 };
 
 // Setup Navigation bindings
@@ -323,7 +275,7 @@ const initNavigation = () => {
 };
 
 // ----------------------------------------------------
-// 5. VIEW 1: CUSTOMER ONBOARDING & SCANNER
+// 5. VIEW 1: CUSTOMER ONBOARDING & GATE SCANNER
 // ----------------------------------------------------
 const initOnboarding = () => {
   const form = document.getElementById('onboarding-form');
@@ -331,33 +283,42 @@ const initOnboarding = () => {
   const statusMsg = document.getElementById('onboarding-status');
   const btnSpeakOnboarding = document.getElementById('btn-speak-onboarding');
 
+  // Prefill the form coordinates based on the initial balance input
+  const initialBalanceInput = document.getElementById('input-balance');
+  if (initialBalanceInput) {
+    state.user.balance = parseFloat(initialBalanceInput.value) || 248500.00;
+  }
+
   if (btnSpeakOnboarding) {
     btnSpeakOnboarding.addEventListener('click', () => {
-      const instructionText = "To access the Non-Human Banking System, please enter your full name, bank account number, bank name, branch, and PAN card number. After filling, tap the biometric fingerprint scanner to authenticate and enter the gateway doors.";
+      const instructionText = "Welcome to the Non-Human Banking System. To begin onboarding, enter your name, bank account parameter details, and PAN identifier. Specify your starting capital account balance, then tap the biometric scanner ring to verify credentials via eKYC.";
       speakPrompt(instructionText);
     });
   }
 
   scanBtn.addEventListener('click', () => {
-    // Validate the input fields using native HTML validation
     if (!form.reportValidity()) {
-      statusMsg.innerText = 'Onboarding parameters invalid. Provide all credentials.';
+      statusMsg.innerText = 'Credentials invalid. Fill all fields according to protocol.';
       statusMsg.className = 'status-msg error';
       return;
+    }
+
+    // Capture starting balance from onboarding input
+    const balanceVal = parseFloat(document.getElementById('input-balance').value);
+    if (!isNaN(balanceVal)) {
+      state.user.balance = balanceVal;
     }
 
     // Enter scanning visual state
     scanBtn.classList.add('scanning');
     scanBtn.disabled = true;
-    statusMsg.innerText = 'Initializing Aadhaar gateway. Validating biometric fingerprints...';
+    statusMsg.innerText = 'Initializing Sat-Core eKYC connection...';
     statusMsg.className = 'status-msg';
 
-    // Simulated network authentication lag
+    // Simulated scanning lag
     setTimeout(() => {
-      // PAN validation occurs inside form validity check.
-      // Generate synthetic verification token
-      const randomHex = Math.floor(Math.random() * 65535).toString(16).toUpperCase();
-      const syntheticToken = `[Aadhaar_Auth_Token_Verified_NHBS2026_${randomHex}]`;
+      const randomHex = Math.floor(1000 + Math.random() * 8999).toString(16).toUpperCase();
+      const syntheticToken = `[Aadhaar_eKYC_Token_Verified_NHBS2026_${randomHex}]`;
 
       // Save credentials into State
       state.user.name = document.getElementById('input-name').value;
@@ -371,21 +332,24 @@ const initOnboarding = () => {
       // Update UI components
       scanBtn.classList.remove('scanning');
       scanBtn.classList.add('verified');
-      statusMsg.innerText = 'Biometrics authenticated! Gateway entrance unlocked.';
+      statusMsg.innerText = 'eKYC Verification Success! Issuer synthetic token created.';
       statusMsg.className = 'status-msg success';
 
-      logEvent('SECURITY', `Synthetic Biometric Token issued: ${syntheticToken}`);
+      logEvent('SECURITY', `eKYC verified. Issued synthetic token placeholder: ${syntheticToken}`);
       
-      // Physically open sliding doors
-      updateDoorsState('OPEN');
-
-      // Proceed to View 2 Modal
+      // Animate gates sliding open on onboarding overlay
       setTimeout(() => {
-        const modal = document.getElementById('tax-framework-modal');
-        if (modal) {
-          modal.showModal();
-        }
-      }, 1500);
+        document.getElementById('onboarding-card').classList.add('fade-out');
+        document.getElementById('onboarding-overlay').classList.add('gate-open');
+        
+        // Trigger Tax Framework Dialog Popup
+        setTimeout(() => {
+          const modal = document.getElementById('tax-framework-modal');
+          if (modal) {
+            modal.showModal();
+          }
+        }, 800);
+      }, 1000);
 
     }, 2500);
   });
@@ -396,27 +360,38 @@ const initOnboarding = () => {
     const selectedMode = document.querySelector('input[name="tax-mode-selection"]:checked').value;
     state.user.taxFramework = selectedMode;
 
-    // Synchronize state values into DOM
+    // Synchronize state values into Dashboard DOM
     document.getElementById('card-name').innerText = state.user.name;
     document.getElementById('card-account').innerText = state.user.account;
-    document.getElementById('card-bank').innerText = state.user.bank;
-    document.getElementById('card-branch').innerText = state.user.branch;
+    document.getElementById('card-bank').innerText = `${state.user.bank} / ${state.user.branch}`;
     document.getElementById('card-pan').innerText = state.user.pan;
-    document.getElementById('card-tax-mode').innerText = selectedMode === 'A' ? 'OPTION A (Manual AI Filing)' : 'OPTION B (Automated Micro-Tax)';
+    document.getElementById('card-token').innerText = state.user.authToken;
+    document.getElementById('card-tax-mode').innerText = selectedMode === 'A' ? 'OPTION A (ITR filing)' : 'OPTION B (Micro-Tax)';
 
     // Update top bar values
     document.getElementById('top-bar-name').innerText = state.user.name;
-    document.getElementById('top-bar-auth-token').innerText = `Synthetic Token: ${state.user.authToken}`;
+    document.getElementById('top-bar-auth-token').innerText = `Token: ${state.user.authToken}`;
     document.getElementById('metric-tax-mode').innerText = selectedMode === 'A' ? 'OPTION A' : 'OPTION B';
     
     const taxBadge = document.getElementById('badge-tax-view-mode');
     if (taxBadge) {
       if (selectedMode === 'B') {
-        taxBadge.innerText = 'AUTOMATED ENGINE ACTIVE';
+        taxBadge.innerText = 'OPTION B (MICRO-TAX ENGINE ACTIVE)';
         taxBadge.className = 'badge badge-green';
       } else {
-        taxBadge.innerText = 'ANNUAL MANUAL FILING ACTIVE';
+        taxBadge.innerText = 'OPTION A (ANNUAL ITR FILING ACTIVE)';
         taxBadge.className = 'badge badge-yellow';
+      }
+    }
+
+    const microTaxBadge = document.getElementById('badge-microtax-view-mode');
+    if (microTaxBadge) {
+      if (selectedMode === 'B') {
+        microTaxBadge.innerText = 'CONTINUOUS AUTOMATED DEBITS ON';
+        microTaxBadge.className = 'badge badge-green';
+      } else {
+        microTaxBadge.innerText = 'CONTINUOUS AUTOMATED DEBITS DEFERRED';
+        microTaxBadge.className = 'badge badge-yellow';
       }
     }
 
@@ -425,10 +400,12 @@ const initOnboarding = () => {
     document.getElementById('receipt-token').innerText = state.user.authToken;
 
     // Write initial log
-    logEvent('SECURITY', `Access granted to user ${state.user.name}. Gateway doors established.`);
-    logEvent('TAX', `Framework set to Mode Option ${selectedMode}. Engine synchronized.`);
+    logEvent('SECURITY', `Access granted to user ${state.user.name}. System integrated.`);
+    logEvent('TAX', `Framework set to Mode Option ${selectedMode}. Engine active.`);
 
-    // Hide onboarding screens
+    updateMetricsDOM();
+
+    // Hide onboarding overlay and reveal main app
     const modal = document.getElementById('tax-framework-modal');
     modal.close();
     
@@ -438,28 +415,10 @@ const initOnboarding = () => {
     // Default route to dashboard
     switchTab('dashboard');
   });
-
-  // Modal dialog light dismiss fallback for browsers lacking native support
-  const modal = document.getElementById('tax-framework-modal');
-  if (modal && !('closedBy' in HTMLDialogElement.prototype)) {
-    modal.addEventListener('click', (event) => {
-      if (event.target !== modal) return;
-      const rect = modal.getBoundingClientRect();
-      const isDialogContent = (
-        rect.top <= event.clientY &&
-        event.clientY <= rect.top + rect.height &&
-        rect.left <= event.clientX &&
-        event.clientX <= rect.left + rect.width
-      );
-      if (!isDialogContent) {
-        modal.close();
-      }
-    });
-  }
 };
 
 // ----------------------------------------------------
-// 6. VIEW 4: AUTOMATIC DOOR SYSTEM & HARDWARE TELEMETRY
+// 6. VIEW 4: AUTOMATIC DOOR SYSTEM & Telemetry
 // ----------------------------------------------------
 const updateDoorsState = (targetState) => {
   state.doorStatus = targetState;
@@ -473,30 +432,30 @@ const updateDoorsState = (targetState) => {
 
   if (targetState === 'OPEN') {
     frame.classList.add('open');
-    btn.innerText = 'TRIGGER DOOR CLOSE';
-    btn.className = 'btn btn-green';
+    btn.innerText = 'TRIGGER GATE CLOSE';
+    btn.className = 'btn btn-green font-orbitron';
     statusOverlay.innerText = 'GATE OPEN (PROCEED)';
-    statusOverlay.className = 'door-overlay-status text-green';
+    statusOverlay.className = 'door-overlay-status text-green font-orbitron';
     
-    dashBadge.innerText = 'DOORS OPEN';
+    dashBadge.innerText = 'GATE UNLOCKED';
     const dashDot = document.getElementById('dot-dash-door-active');
     if (dashDot) dashDot.className = 'status-dot green';
 
-    navBadge.innerText = 'UNLOCKED';
+    navBadge.innerText = 'OPEN';
     navBadge.className = 'badge badge-green sidebar-badge';
 
     telemLaser.innerText = 'DEACTIVATED';
-    telemLaser.className = 'telemetry-val text-green';
+    telemLaser.className = 'telemetry-val text-green font-mono';
 
-    logEvent('SECURITY', 'Entrance gates physically OPENED. Security lasers deactivated.');
+    logEvent('SECURITY', 'Entrance gates physically OPENED. Lasers offline.');
   } else {
     frame.classList.remove('open');
-    btn.innerText = 'TRIGGER DOOR OPEN';
-    btn.className = 'btn btn-red';
+    btn.innerText = 'TRIGGER GATE OPEN';
+    btn.className = 'btn btn-red font-orbitron';
     statusOverlay.innerText = 'SECURE GATE LOCKED';
-    statusOverlay.className = 'door-overlay-status text-red';
+    statusOverlay.className = 'door-overlay-status text-red font-orbitron';
     
-    dashBadge.innerText = 'DOORS CLOSED';
+    dashBadge.innerText = 'GATE SECURED';
     const dashDot = document.getElementById('dot-dash-door-active');
     if (dashDot) dashDot.className = 'status-dot red';
 
@@ -504,9 +463,9 @@ const updateDoorsState = (targetState) => {
     navBadge.className = 'badge badge-accent sidebar-badge';
 
     telemLaser.innerText = 'ACTIVE (HIGH VOLTAGE)';
-    telemLaser.className = 'telemetry-val text-red';
+    telemLaser.className = 'telemetry-val text-red font-mono';
 
-    logEvent('SECURITY', 'Entrance gates physically LOCKED. Security lasers activated.');
+    logEvent('SECURITY', 'Entrance gates physically LOCKED. Laser grids online.');
   }
 };
 
@@ -516,7 +475,7 @@ const initDoorsSystem = () => {
 
   if (btnSpeak) {
     btnSpeak.addEventListener('click', () => {
-      const statusText = `Door telemetry active. Gates are currently ${state.doorStatus === 'OPEN' ? 'OPEN and lasers are DEACTIVATED' : 'CLOSED and secure lasers are ACTIVE'}. LOCK pressure is nominal at four hundred twenty Bar.`;
+      const statusText = `Door telemetry stream active. Entrance gates are currently ${state.doorStatus === 'OPEN' ? 'OPEN and boundary security lasers are deactivated' : 'CLOSED and secure laser fences are fully active'}. Lock hydraulics pressure is nominal at four hundred twenty Bar.`;
       speakPrompt(statusText);
     });
   }
@@ -529,20 +488,20 @@ const initDoorsSystem = () => {
     }
   });
 
-  // Simple automated telemetry logs simulation
+  // Simulated telemetry logs
   setInterval(() => {
     if (!state.user.verified) return;
-    const sensors = ['Optical beam aligns correct', 'Pressure threshold 420 Bar nominal', 'Infrared grid locked', 'Locker circuit secure'];
+    const sensors = ['Optical alignment: nominal', 'Hydraulics pressure: 420 Bar', 'Laser grid boundaries secured', 'Control circuit: PASS'];
     const selected = sensors[Math.floor(Math.random() * sensors.length)];
     const logBox = document.getElementById('sensor-telemetry-logs');
     if (logBox) {
       const item = document.createElement('div');
       item.className = 'sensor-log-item';
-      item.innerHTML = `<span class="log-time">[${getTimestamp().split(' ')[1]}]</span> SENSOR TELEM: ${selected}`;
+      item.innerHTML = `<span class="log-time font-mono">[${getTimestamp().split(' ')[1]}]</span> SENSOR TELEM: ${selected}`;
       logBox.appendChild(item);
       logBox.scrollTop = logBox.scrollHeight;
     }
-  }, 8000);
+  }, 10000);
 };
 
 // ----------------------------------------------------
@@ -556,7 +515,7 @@ const initVoiceHub = () => {
   // Sync language selection
   langSelect.addEventListener('change', () => {
     state.speech.lang = langSelect.value;
-    logEvent('SYSTEM', `Assistant vocal language switched to: ${state.speech.lang}`);
+    logEvent('SYSTEM', `Voice vocal language switched to: ${state.speech.lang}`);
     const confirmationText = LANG_CONFIRMATIONS[state.speech.lang] || `Language set to ${LANG_NAMES[state.speech.lang]}`;
     speakPrompt(confirmationText, state.speech.lang);
   });
@@ -566,7 +525,7 @@ const initVoiceHub = () => {
     const text = customTxt.value.trim();
     if (text) {
       speakPrompt(text);
-      logEvent('SYSTEM', `Custom text synthesized: "${text}"`);
+      logEvent('SYSTEM', `Vocal synthesis executed: "${text.substring(0, 30)}..."`);
     }
   });
 
@@ -579,7 +538,7 @@ const initVoiceHub = () => {
       if (state.speech.lang === 'hi-IN') promptText = p.getAttribute('data-hi');
       
       speakPrompt(promptText);
-      logEvent('SYSTEM', `Preset text synthesized: "${promptText}"`);
+      logEvent('SYSTEM', `Broadcast vocalized: "${promptText.substring(0, 30)}..."`);
     });
   });
 };
@@ -593,11 +552,12 @@ const processChatbotQuery = (query) => {
   const chatHistory = document.getElementById('chat-messages');
   const classifierFeedback = document.getElementById('classifier-feedback');
 
-  // 1. Render User Message
+  // Render User Message
   const userRow = document.createElement('div');
   userRow.className = 'chat-message user-msg';
-  userRow.innerHTML = `<p>${query}</p><span class="message-time">${getTimestamp().split(' ')[1]}</span>`;
+  userRow.innerHTML = `<p>${query}</p><span class="message-time font-mono">${getTimestamp().split(' ')[1]}</span>`;
   chatHistory.appendChild(userRow);
+  chatHistory.scrollTop = chatHistory.scrollHeight;
 
   // Intent classification logic (regular expression pattern matching)
   let intent = 'UNKNOWN';
@@ -607,7 +567,7 @@ const processChatbotQuery = (query) => {
   const q = query.toLowerCase();
 
   if (/\bfile\b|\bitr\b|\bdeduct\b|\binflow\b|\btax\b/i.test(q)) {
-    intent = 'TAXATION_LEDGER_STREAM';
+    intent = 'ITR_TAXATION_LEDGER';
     responseText = 'I have identified your request for tax return filing processes. Transitioning you to the AI Tax Ledger console.';
     targetTab = 'taxation';
   } else if (/\bspend\b|\bspending\b|\btransaction\b|\bgst\b|\bpurchase\b|\bluxury\b|\bessential\b/i.test(q)) {
@@ -650,7 +610,7 @@ const processChatbotQuery = (query) => {
   setTimeout(() => {
     const botRow = document.createElement('div');
     botRow.className = 'chat-message bot-msg';
-    botRow.innerHTML = `<p>${responseText}</p><span class="message-time">${getTimestamp().split(' ')[1]}</span>`;
+    botRow.innerHTML = `<p>${responseText}</p><span class="message-time font-mono">${getTimestamp().split(' ')[1]}</span>`;
     chatHistory.appendChild(botRow);
     chatHistory.scrollTop = chatHistory.scrollHeight;
 
@@ -672,6 +632,13 @@ const processChatbotQuery = (query) => {
 const updateMetricsDOM = () => {
   document.getElementById('metric-balance').innerText = formatCurrency(state.user.balance);
   document.getElementById('metric-tax-paid').innerText = formatCurrency(state.user.taxPaid);
+  
+  // Also update dashboard gold benchmark value slightly for dynamic feel
+  const goldRate = 6850 + (Math.random() * 6 - 3);
+  const benchGold = document.getElementById('bench-gold');
+  if (benchGold) {
+    benchGold.innerText = `₹${goldRate.toFixed(2)} / g`;
+  }
 };
 
 const initTaxationEngine = () => {
@@ -681,35 +648,29 @@ const initTaxationEngine = () => {
 
   if (btnSpeakTax) {
     btnSpeakTax.addEventListener('click', () => {
-      const text = `Annual Income Tax Ledger. Gross salary income is fifteen lakh rupees. Capital gain dividends are two lakh fifty thousand rupees. PPF ELSS deductions are one lakh fifty thousand rupees. Net payable annual tax is three lakh twenty two thousand five hundred rupees.`;
+      const text = `Annual Income Tax Ledger. Gross salary inflow is eight lakh fifty thousand rupees. Deductions are one lakh fifty thousand rupees. Calculated net tax due is thirty two thousand five hundred rupees. Click File ITR to execute payment.`;
       speakPrompt(text);
     });
   }
 
   btnFile.addEventListener('click', () => {
-    const taxAmount = 322500.00;
+    const taxAmount = 32500.00;
 
     if (state.user.balance < taxAmount) {
-      logEvent('TAX', 'ITR Return Filing Failure: Insufficient capital funds.');
-      alert('Error: Insufficient balance to pay annual tax return.');
+      logEvent('TAX', 'ITR Filing Aborted: Insufficient account capital reserves.');
+      alert('ITR Filing Error: Insufficient balance to settle annual tax return.');
       return;
     }
 
-    // Debit balance, increment pool
+    // Settle tax
     state.user.balance -= taxAmount;
     state.user.taxPaid += taxAmount;
     updateMetricsDOM();
 
-    // Generate random Receipt number
-    const randomHex = Math.floor(1000 + Math.random() * 8999);
-    const receiptNum = `#ITR-2026-NHBS-${randomHex}`;
-
-    // Update receipt box
-    document.getElementById('receipt-id').innerText = receiptNum;
-    document.getElementById('receipt-amount').innerText = formatCurrency(taxAmount);
+    // Show receipt
     document.getElementById('itr-receipt-container').classList.remove('hidden');
 
-    logEvent('TAX', `ITR return filed successfully. ID: ${receiptNum}. Settle amount: ${formatCurrency(taxAmount)}.`);
+    logEvent('TAX', `Annual return ITR-2026-98124 successfully filed. Settled liabilities: ${formatCurrency(taxAmount)}.`);
   });
 };
 
@@ -720,14 +681,14 @@ const initMicroTaxEngine = () => {
 
   if (btnSpeakMicro) {
     btnSpeakMicro.addEventListener('click', () => {
-      const text = `Micro Tax Engine active. Current rules set: Exempted items are taxed at zero percent GST. Precious items like gold are taxed at three percent GST. Essential commodities are taxed at five percent GST. Standard goods are taxed at twelve percent GST. Services are taxed at eighteen percent GST. Luxury items are taxed at twenty eight percent GST. Option B automated background debits are active.`;
+      const text = `Spending micro tax engine rule matrix. Luxury spend is taxed at twenty eight percent. Service dining out is eighteen percent. Utilities is twelve percent. Essentials are five percent. Precious metals are three percent. Medical kits are zero percent. Automated deductions apply if option B is active.`;
       speakPrompt(text);
     });
   }
 
   spendBtns.forEach(b => {
     b.addEventListener('click', () => {
-      const category = b.getAttribute('data-category'); // 'Luxury', 'Service', 'Essential', 'Standard', 'Precious', 'Exempt'
+      const category = b.getAttribute('data-category');
       const amount = parseFloat(b.getAttribute('data-amount'));
       const item = b.getAttribute('data-item');
 
@@ -743,7 +704,8 @@ const initMicroTaxEngine = () => {
       const totalDebit = amount + computedGst;
 
       if (state.user.balance < totalDebit) {
-        logEvent('TRANSACTION', `Declined simulator spend on ${item}. Balance low.`);
+        logEvent('TRANSACTION', `Spend simulation failed on ${item}. Insufficient balance.`);
+        alert('Simulator Error: Insufficient balance for this transaction.');
         return;
       }
 
@@ -752,20 +714,20 @@ const initMicroTaxEngine = () => {
 
       let logMessage = '';
       if (mode === 'B') {
-        // Continuous debit: charges base + tax automatically
+        // Option B: Continuous debit (deduct cost + tax immediately)
         state.user.balance -= totalDebit;
         state.user.taxPaid += computedGst;
         updateMetricsDOM();
 
-        logMessage = `Spent ${formatCurrency(amount)} + Micro-Tax ${formatCurrency(computedGst)} (GST ${gstRate*100}%). Debited.`;
-        logEvent('TRANSACTION', `Micro-Tax Engine continuous debit applied. Item: ${item}. Debited ${formatCurrency(totalDebit)}.`);
+        logMessage = `Deducted: ${formatCurrency(amount)} + Micro-Tax ${formatCurrency(computedGst)} (GST ${gstRate*100}%)`;
+        logEvent('TRANSACTION', `Micro-Tax Auto-Debit: ${item}. Paid ${formatCurrency(totalDebit)} incl. GST.`);
       } else {
-        // Option A: manual return debits base cost only, caches tax
+        // Option A: manual return debits base cost only, defers tax
         state.user.balance -= amount;
         updateMetricsDOM();
 
-        logMessage = `Spent ${formatCurrency(amount)}. Deferred Tax ${formatCurrency(computedGst)} (GST ${gstRate*100}%).`;
-        logEvent('TRANSACTION', `Transaction approved. Option A rules. Item: ${item}. Debited ${formatCurrency(amount)}. GST deferred.`);
+        logMessage = `Approved: ${formatCurrency(amount)}. Deferred Tax ${formatCurrency(computedGst)} (GST ${gstRate*100}%)`;
+        logEvent('TRANSACTION', `Transaction Approved (Option A): ${item}. Cost ${formatCurrency(amount)} debited. GST deferred.`);
       }
 
       // Render log line in simulator view
@@ -778,7 +740,7 @@ const initMicroTaxEngine = () => {
         logRow.className = 'ledger-transaction-item';
         logRow.innerHTML = `
           <span>[${category}] ${item}</span>
-          <strong>${logMessage}</strong>
+          <strong class="${mode === 'B' ? 'text-green' : 'text-cyan'}">${logMessage}</strong>
         `;
         simLedger.appendChild(logRow);
         simLedger.scrollTop = simLedger.scrollHeight;
@@ -817,7 +779,7 @@ const initPortfolioAdvisor = () => {
     document.getElementById('portfolio-sgb-val').innerText = formatCurrency(split.sgb);
     document.getElementById('portfolio-index-val').innerText = formatCurrency(split.mutual);
 
-    // Trigger visual reflow for transitions
+    // Trigger visual reflow for progress fill width
     document.getElementById('portfolio-fd-fill').style.width = '40%';
     document.getElementById('portfolio-sgb-fill').style.width = '30%';
     document.getElementById('portfolio-index-fill').style.width = '30%';
@@ -827,24 +789,24 @@ const initPortfolioAdvisor = () => {
     const split = calculateSplit();
     if (split) {
       updatePortfolioUI(split);
+      logEvent('SYSTEM', `Wealth Advisor: Portfolio allocation computed for monthly savings of ${formatCurrency(split.savings)}.`);
       
-      const audioText = `AI optimization complete. Monthly capital of ${formatCurrency(split.savings)} has been allocated into our three tier risk hedged asset portfolio. Fixed Deposits forty percent at ${formatCurrency(split.fd)}. Sovereign Gold Bonds thirty percent at ${formatCurrency(split.sgb)}. Index Mutual Funds thirty percent at ${formatCurrency(split.mutual)}.`;
+      const audioText = `Portfolio allocation generated. Monthly savings of ${formatCurrency(split.savings)} structures into: Fixed Deposits forty percent at ${formatCurrency(split.fd)}. Sovereign Gold Bonds thirty percent at ${formatCurrency(split.sgb)}. Index Mutual Funds thirty percent at ${formatCurrency(split.mutual)}.`;
       speakPrompt(audioText);
-      logEvent('SYSTEM', `Wealth advisor optimized allocation split generated on capital: ${formatCurrency(split.savings)}.`);
     }
   });
 
   btnListen.addEventListener('click', () => {
     const split = calculateSplit();
     if (split) {
-      const audioText = `Heuristic investment model recommendation: Allocate ${formatCurrency(split.fd)} in secure fixed deposits. Assign ${formatCurrency(split.sgb)} in inflation resistant gold bonds. Position remaining ${formatCurrency(split.mutual)} in market index mutual funds for maximum compound growth.`;
+      const audioText = `Sovereign wealth split models recommend: Allocate ${formatCurrency(split.fd)} in secure yielding Fixed Deposits. Allocate ${formatCurrency(split.sgb)} in inflation hedging Gold Bonds. Position remaining ${formatCurrency(split.mutual)} in index tracking Mutual Funds.`;
       speakPrompt(audioText);
     }
   });
 };
 
 // ----------------------------------------------------
-// 11. VIEW 10: NEW! AI GEOTAGGED PROPERTY LOAN SYSTEM
+// 11. VIEW 10: AI GEOTAGGED PROPERTY LOAN SYSTEM
 // ----------------------------------------------------
 const initLoanSystem = () => {
   const deedUpload = document.getElementById('deed-upload-slot');
@@ -856,9 +818,6 @@ const initLoanSystem = () => {
   
   const scannerContainer = document.getElementById('exif-scanner-container');
   const exifPanel = document.getElementById('exif-data-panel');
-  const exifLat = document.getElementById('exif-lat');
-  const exifLng = document.getElementById('exif-lng');
-  const exifAccuracy = document.getElementById('exif-accuracy');
   const exifTime = document.getElementById('exif-time');
 
   const inputArea = document.getElementById('loan-area');
@@ -887,12 +846,12 @@ const initLoanSystem = () => {
   const sanctionRefNo = document.getElementById('sanction-ref-no');
   const btnSanctionSpeak = document.getElementById('btn-sanction-speak');
 
-  // Recalculate property valuation and LTV limit
+  // Recalculate property valuation and strict 50% LTV limit
   const recalculateLoan = () => {
     const area = parseFloat(inputArea.value) || 0;
     const rate = parseFloat(inputRate.value) || 0;
     const totalValuation = area * rate;
-    const maxApproved = totalValuation * 0.50;
+    const maxApproved = totalValuation * 0.50; // STRICT 50% LTV Cap
 
     valTotal.innerText = formatCurrency(totalValuation);
     valMax.innerText = formatCurrency(maxApproved);
@@ -901,16 +860,18 @@ const initLoanSystem = () => {
     state.loan.area = area;
     state.loan.rate = rate;
 
-    // Dynamically limit requested loan input and range
+    // Limit slide bounds
     rangeRequested.max = maxApproved;
     
     let requested = parseFloat(inputRequested.value) || 0;
     
-    // Check strict 50% LTV limit enforcement
+    // Strict enforcement check
     if (requested > maxApproved) {
       requested = maxApproved;
       inputRequested.value = requested;
       badgeCap.classList.remove('hidden');
+    } else if (requested === maxApproved && maxApproved > 0) {
+      badgeCap.classList.remove('hidden'); // Show limit warning badge
     } else {
       badgeCap.classList.add('hidden');
     }
@@ -918,11 +879,10 @@ const initLoanSystem = () => {
     rangeRequested.value = requested;
     state.loan.requestedAmount = requested;
 
-    // Calculate EMI
-    // EMI = [P x r x (1+r)^n] / [(1+r)^n - 1]
+    // EMI Calculation
     const principal = requested;
-    const annualInterestRate = state.loan.interestRate; // 8.5%
-    const monthlyRate = annualInterestRate / 12 / 100;
+    const annualInterest = state.loan.interestRate;
+    const monthlyRate = annualInterest / 12 / 100;
     const tenureMonths = state.loan.tenure * 12;
 
     let emi = 0;
@@ -934,7 +894,6 @@ const initLoanSystem = () => {
     return { totalValuation, maxApproved, requested, emi };
   };
 
-  // Event listeners for recalculations
   inputArea.addEventListener('input', recalculateLoan);
   inputRate.addEventListener('input', recalculateLoan);
   
@@ -948,8 +907,6 @@ const initLoanSystem = () => {
       val = maxApproved;
       e.target.value = val;
       badgeCap.classList.remove('hidden');
-    } else {
-      badgeCap.classList.add('hidden');
     }
     
     rangeRequested.value = val;
@@ -970,25 +927,23 @@ const initLoanSystem = () => {
     recalculateLoan();
   });
 
-  // Enable button checking
+  // Check upload verification triggers
   const checkUploadStatus = () => {
     if (state.loan.deedUploaded && state.loan.photoUploaded) {
       btnSanction.disabled = false;
-      btnSanction.innerText = "GENERATE DIGITAL SANCTION LETTER";
       const hdrBadge = document.getElementById('badge-loan-hdr');
       if (hdrBadge) {
-        hdrBadge.innerText = "VALIDATED FOR SANCTION";
+        hdrBadge.innerText = "SURVEY ACCREDITED";
         hdrBadge.className = "badge badge-green";
       }
     }
   };
 
-  // Trigger Deed verification
   const verifyDeed = () => {
-    deedLabel.innerText = "📄 deed_verified_certified.pdf (Loaded)";
+    deedLabel.innerText = "📄 Verified_Deed_Checksum_Pass.pdf";
     deedUpload.style.borderColor = "var(--accent-green)";
     state.loan.deedUploaded = true;
-    logEvent('SECURITY', 'Property deed uploaded and verified. Escrow checksum check: PASS.');
+    logEvent('SECURITY', 'Deed document checksum validated against land archives.');
     checkUploadStatus();
   };
 
@@ -997,7 +952,6 @@ const initLoanSystem = () => {
     verifyDeed();
   });
 
-  // Drag-and-drop deed visual binding
   deedUpload.addEventListener('dragover', (e) => {
     e.preventDefault();
     deedUpload.style.background = "rgba(0, 242, 254, 0.08)";
@@ -1011,7 +965,6 @@ const initLoanSystem = () => {
     verifyDeed();
   });
 
-  // Trigger Photo verification & EXIF scanning
   const verifyPhoto = () => {
     photoUpload.classList.add('hidden');
     scannerContainer.classList.remove('hidden');
@@ -1019,7 +972,7 @@ const initLoanSystem = () => {
     setTimeout(() => {
       scannerContainer.classList.add('hidden');
       photoUpload.classList.remove('hidden');
-      photoLabel.innerText = "📸 site_survey_north_elevation.jpg (Parsed)";
+      photoLabel.innerText = "📸 Sat_Core_Elevation_Verified.jpg";
       photoUpload.style.borderColor = "var(--accent-green)";
       exifPanel.classList.remove('hidden');
       
@@ -1028,10 +981,8 @@ const initLoanSystem = () => {
       
       state.loan.photoUploaded = true;
       state.loan.gpsTimestamp = dateStr;
-      state.loan.coordinates = 'Lat: 11.3410° N, Long: 77.7172° E';
-      state.loan.accuracy = '±3.2 meters (Verified)';
 
-      logEvent('SECURITY', 'Site photo EXIF metadata scanned. Extracted GPS: Lat: 11.3410 N, Long: 77.7172 E.');
+      logEvent('SECURITY', 'Site photo EXIF tagging scanned. Coordinates matched: Lat 11.3410 N, Long 77.7172 E.');
       checkUploadStatus();
     }, 2000);
   };
@@ -1041,7 +992,6 @@ const initLoanSystem = () => {
     verifyPhoto();
   });
 
-  // Drag-and-drop photo visual binding
   photoUpload.addEventListener('dragover', (e) => {
     e.preventDefault();
     photoUpload.style.background = "rgba(0, 242, 254, 0.08)";
@@ -1055,47 +1005,40 @@ const initLoanSystem = () => {
     verifyPhoto();
   });
 
-  // Sanction generation trigger
+  // Sanction generator trigger
   btnSanction.addEventListener('click', () => {
     const { totalValuation, requested, emi } = recalculateLoan();
     
-    // Generate random 4-digit ID
-    const randomId = Math.floor(1000 + Math.random() * 8999);
-    const suffix = state.user.pan ? state.user.pan.substring(5, 9) : "SOC";
-    const refNum = `NHBS-PL-${randomId}-${suffix}`;
-    
-    sanctionRefNo.innerText = `REF: ${refNum}`;
-    sanctionName.innerText = state.user.name || "Karthikeya Manikandan S";
-    sanctionToken.innerText = state.user.authToken || "[Aadhaar_Auth_Token_Verified]";
+    sanctionRefNo.innerText = "REF: #LAP-2026-88421";
+    sanctionName.innerText = state.user.name;
+    sanctionToken.innerText = state.user.authToken;
     sanctionCoords.innerText = state.loan.coordinates;
     sanctionGpsAccuracy.innerText = state.loan.accuracy;
     sanctionPropVal.innerText = formatCurrency(totalValuation);
     sanctionLoanAmount.innerText = formatCurrency(requested);
-    sanctionLtvRatio.innerText = `${((requested / totalValuation) * 100).toFixed(2)}%`;
+    sanctionLtvRatio.innerText = `${((requested / totalValuation) * 100).toFixed(2)}% [50% Max Cap Compliant]`;
     sanctionEmi.innerText = `${formatCurrency(emi)} / Month`;
 
-    // Show letter
+    // Show letter view
     sanctionContainer.classList.remove('hidden');
     sanctionContainer.scrollIntoView({ behavior: 'smooth' });
 
-    logEvent('TRANSACTION', `AI Geotagged Loan Sanctioned: Amount ${formatCurrency(requested)}, LTV: ${((requested / totalValuation) * 100).toFixed(2)}%, Ref: ${refNum}.`);
+    logEvent('TRANSACTION', `Asset-Backed Loan Sanctioned. Ref: LAP-2026-88421. Principal: ${formatCurrency(requested)}.`);
   });
 
-  // Listen to Sanction Details click
   btnSanctionSpeak.addEventListener('click', () => {
     const { requested, emi } = recalculateLoan();
     let readText = '';
     if (state.speech.lang === 'ta-IN') {
-      readText = `கடன் ஒப்புதல் அறிக்கை. கடன் வாங்குபவர் ${state.user.name}. அனுமதிக்கப்பட்ட கடன் தொகை ${formatCurrency(requested)}. வட்டி விகிதம் எட்டு புள்ளி ஐந்து சதவீதம். மாத தவணை ${formatCurrency(emi)}.`;
+      readText = `சொத்து பிணைய கடன் அனுமதி விவரங்கள். விண்ணப்பதாரர் கார்த்திகேய மணிகண்டன். அனுமதிக்கப்பட்ட கடன் தொகை ${formatCurrency(requested)}. மாத தவணை ${formatCurrency(emi)}. வட்டி விகிதம் எட்டு புள்ளி ஐந்து சதவீதம்.`;
     } else if (state.speech.lang === 'hi-IN') {
-      readText = `ऋण मंजूरी ज्ञापन। उधारकर्ता ${state.user.name} है। स्वीकृत ऋण राशि ${formatCurrency(requested)} रुपये है। ब्याज दर आठ दशमलव का पांच प्रतिशत है। मासिक ईएमआई ${formatCurrency(emi)} रुपये है।`;
+      readText = `संपत्ति ऋण मंजूरी ज्ञापन। उधारकर्ता कार्तिकेय मणिकंदन है। स्वीकृत ऋण राशि ${formatCurrency(requested)} रुपये है। मासिक ईएमआई ${formatCurrency(emi)} रुपये है। ब्याज दर आठ दशमलव पांच प्रतिशत है।`;
     } else {
-      readText = `Loan sanction memorandum details. Borrower is ${state.user.name}. Sanctioned loan principal is ${formatCurrency(requested)} at fixed interest rate of eight point five percent per annum. Monthly installment is ${formatCurrency(emi)}.`;
+      readText = `Loan sanction memorandum details. Borrower is ${state.user.name}. Sanctioned loan principal is ${formatCurrency(requested)} at a fixed interest rate of eight point five percent per annum. Estimated monthly installment is ${formatCurrency(emi)}.`;
     }
     speakPrompt(readText);
   });
 
-  // Trigger initial calculations
   recalculateLoan();
 };
 
@@ -1114,14 +1057,9 @@ const initVaultLocker = () => {
 
   const updatePinDisplay = () => {
     const length = state.locker.buffer.length;
-    if (length === 0) {
-      pinReadout.innerText = '----';
-    } else {
-      pinReadout.innerText = '*'.repeat(length);
-    }
+    pinReadout.innerText = length === 0 ? '----' : '*'.repeat(length);
   };
 
-  // Bind number digit clicks
   pinDigits.forEach(b => {
     b.addEventListener('click', () => {
       if (state.locker.buffer.length < 4) {
@@ -1131,7 +1069,6 @@ const initVaultLocker = () => {
     });
   });
 
-  // Clear buffer
   clearBtn.addEventListener('click', () => {
     state.locker.buffer = '';
     updatePinDisplay();
@@ -1141,46 +1078,45 @@ const initVaultLocker = () => {
     scanLabel.innerText = 'Awaiting PIN Code Verification...';
   });
 
-  // Speak locker status on button click
   const btnSpeakVault = document.getElementById('btn-speak-vault');
   if (btnSpeakVault) {
     btnSpeakVault.addEventListener('click', () => {
-      let vaultDetails = `Locker status: ${state.locker.status === 'UNLOCKED' ? 'UNLOCKED and ACCESS IS ACTIVE' : 'LOCKED and SECURED'}. `;
+      let vaultDetails = `Locker status: Safe deposit vault locker is currently ${state.locker.status === 'UNLOCKED' ? 'UNLOCKED and accessible' : 'LOCKED and secured'}. `;
       if (state.locker.pinVerified) {
-        vaultDetails += "PIN is verified. Biometric scan is ready.";
+        vaultDetails += "Passcode verified. Scan thumb biometrics to unlock.";
       } else {
-        vaultDetails += "Requires security PIN code followed by secondary biometrics.";
+        vaultDetails += "Requires passcode PIN verify first.";
       }
       speakPrompt(vaultDetails);
     });
   }
 
-  // Validate Code
+  // Validate Code PIN
   enterBtn.addEventListener('click', () => {
     if (state.locker.buffer === state.locker.pinCode) {
       state.locker.pinVerified = true;
       scanContainer.classList.remove('disabled');
       scanBtn.disabled = false;
-      scanLabel.innerText = 'PIN OK. Touch fingerprint scanner to open.';
-      logEvent('VAULT', 'Locker access: PIN authentication match verified. Gateway scanner enabled.');
+      scanLabel.innerText = 'PIN OK. Scan biometrics to toggle lock state.';
+      logEvent('VAULT', 'Locker access: PIN validated successfully. Scanner active.');
     } else {
       state.locker.buffer = '';
       updatePinDisplay();
       scanContainer.classList.add('disabled');
       scanBtn.disabled = true;
       state.locker.pinVerified = false;
-      scanLabel.innerText = 'INVALID PASSCODE. ACCESS DENIED.';
-      logEvent('SECURITY', 'Locker access alert: Invalid vault passcode attempt recorded.');
+      scanLabel.innerText = 'INVALID PIN. SECURITY BLOCKED.';
+      logEvent('SECURITY', 'Locker access failure: Invalid PIN entry attempt.');
     }
   });
 
-  // Biometric touch trigger toggles lock status
+  // Scan biometric to toggle status
   scanBtn.addEventListener('click', () => {
     if (!state.locker.pinVerified) return;
 
     scanBtn.classList.add('scanning');
     scanBtn.disabled = true;
-    scanLabel.innerText = 'Validating locker access token key...';
+    scanLabel.innerText = 'Authenticating fingerprint token...';
 
     setTimeout(() => {
       scanBtn.classList.remove('scanning');
@@ -1198,45 +1134,45 @@ const initVaultLocker = () => {
         state.locker.status = 'UNLOCKED';
         graphic.classList.add('unlocked');
         
-        labelText.innerText = 'VAULT DOORS OPEN';
+        labelText.innerText = 'SAFE LOCKER UNLOCKED 🔓';
         labelText.className = 'status-overlay-text text-green font-orbitron';
         
-        badgeTop.innerText = 'UNLOCKED ACCESS ACTIVE';
+        badgeTop.innerText = 'VAULT ACCESS ACTIVE';
         badgeTop.className = 'badge badge-green';
         
         accessLvl.innerText = 'AUTHORIZED';
-        accessLvl.className = 'text-green';
+        accessLvl.className = 'text-green font-mono';
 
-        badgeDash.innerText = 'LOCKER UNLOCKED';
+        badgeDash.innerText = 'VAULT UNLOCKED';
         if (dotDash) dotDash.className = 'status-dot green';
 
-        badgeSidebar.innerText = 'OPEN';
+        badgeSidebar.innerText = 'UNLOCKED';
         badgeSidebar.className = 'badge badge-green sidebar-badge';
 
-        logEvent('VAULT', 'Vault Locker Access: Physical security lockers UNLOCKED. Token session active.');
+        logEvent('VAULT', 'Locker access: Safe deposit locker vaults UNLOCKED.');
       } else {
         state.locker.status = 'LOCKED';
         graphic.classList.remove('unlocked');
         
-        labelText.innerText = 'SECURE LOCKS ACTIVE';
+        labelText.innerText = 'VAULT LOCKED 🔒';
         labelText.className = 'status-overlay-text text-red font-orbitron';
         
-        badgeTop.innerText = 'SECURED LOCKOUT ACTIVE';
+        badgeTop.innerText = 'VAULT LOCKED';
         badgeTop.className = 'badge badge-red';
         
         accessLvl.innerText = 'UNAUTHORIZED';
-        accessLvl.className = 'text-red';
+        accessLvl.className = 'text-red font-mono';
 
-        badgeDash.innerText = 'SECURELY LOCKED';
+        badgeDash.innerText = 'VAULT LOCKED';
         if (dotDash) dotDash.className = 'status-dot red';
 
         badgeSidebar.innerText = 'LOCKED';
         badgeSidebar.className = 'badge badge-red sidebar-badge';
 
-        logEvent('VAULT', 'Vault Locker Access: Security locks engaged. Safe deposit locker LOCKED.');
+        logEvent('VAULT', 'Locker access: Safe deposit locker vaults LOCKED.');
       }
 
-      // Reset PIN flow
+      // Reset PINpad buffer
       state.locker.buffer = '';
       state.locker.pinVerified = false;
       updatePinDisplay();
@@ -1248,8 +1184,48 @@ const initVaultLocker = () => {
 };
 
 // ----------------------------------------------------
-// 12. CHATBOT AND CLOCK SCHEDULERS
+// 13. BALANCE EDITOR & TELEMETRY CLOCK
 // ----------------------------------------------------
+const initBalanceEditor = () => {
+  const trigger = document.getElementById('balance-card-trigger');
+  const editContainer = document.getElementById('balance-input-container');
+  const directInput = document.getElementById('balance-direct-input');
+  const saveBtn = document.getElementById('btn-save-balance');
+
+  trigger.addEventListener('click', (e) => {
+    // If input is visible, don't trigger toggle again when clicking elements inside
+    if (!editContainer.classList.contains('hidden') && e.target !== trigger) {
+      return;
+    }
+    
+    // Toggle input display
+    editContainer.classList.remove('hidden');
+    directInput.value = state.user.balance;
+    directInput.focus();
+  });
+
+  saveBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const newBal = parseFloat(directInput.value);
+    if (!isNaN(newBal) && newBal >= 0) {
+      const oldBal = state.user.balance;
+      state.user.balance = newBal;
+      updateMetricsDOM();
+      
+      logEvent('SYSTEM', `Account balance updated: ${formatCurrency(oldBal)} to ${formatCurrency(newBal)}.`);
+      speakPrompt(`Account balance modified to ${formatCurrency(newBal)}.`);
+    }
+    editContainer.classList.add('hidden');
+  });
+
+  // Handle clicking outside balance editor to close it
+  document.addEventListener('click', (e) => {
+    if (!trigger.contains(e.target)) {
+      editContainer.classList.add('hidden');
+    }
+  });
+};
+
 const initChatbot = () => {
   const form = document.getElementById('chatbot-form');
   const input = document.getElementById('chat-input');
@@ -1292,17 +1268,18 @@ const initVoiceController = () => {
       if (state.speech.muted) {
         muteBtn.innerHTML = '<span class="toggle-icon">🔇</span> Voice: OFF';
         muteBtn.classList.add('muted');
-        // Stop any active speech immediately
+        
+        // STRICT RULE: Cancel speech on mute
         if ('speechSynthesis' in window) {
           window.speechSynthesis.cancel();
         }
         if (stopBtn) stopBtn.classList.add('hidden');
         state.speech.active = false;
-        logEvent('SYSTEM', 'Voice Assistant muted globally.');
+        logEvent('SYSTEM', 'Voice assistant synthesis muted globally.');
       } else {
         muteBtn.innerHTML = '<span class="toggle-icon">🔊</span> Voice: ON';
         muteBtn.classList.remove('muted');
-        logEvent('SYSTEM', 'Voice Assistant unmuted globally.');
+        logEvent('SYSTEM', 'Voice assistant synthesis unmuted globally.');
       }
     });
   }
@@ -1314,7 +1291,7 @@ const initVoiceController = () => {
       }
       stopBtn.classList.add('hidden');
       state.speech.active = false;
-      logEvent('SYSTEM', 'Speech playback manually terminated.');
+      logEvent('SYSTEM', 'Acoustic synthesis manually stopped.');
     });
   }
 };
@@ -1329,7 +1306,7 @@ const startSystemClock = () => {
 };
 
 // ----------------------------------------------------
-// 13. BOOTSTRAP INITIALIZATION
+// 14. BOOTSTRAP INITIALIZATION
 // ----------------------------------------------------
 document.addEventListener('DOMContentLoaded', () => {
   initSpeechEngine();
@@ -1344,5 +1321,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initPortfolioAdvisor();
   initLoanSystem();
   initVaultLocker();
+  initBalanceEditor();
   startSystemClock();
 });
